@@ -189,6 +189,7 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
   <div class="ntab" onclick="go('store-view')">Store Sales</div>
   <div class="ntab" onclick="go('search')">Search</div>
   <div class="ntab" onclick="go('history')">History</div>
+  <div class="ntab" onclick="go('transfer')">Stock Transfer</div>
 </nav>
 
 <!-- CONTENT -->
@@ -406,6 +407,39 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
     </div>
   </div>
 
+
+  <!-- STOCK TRANSFER -->
+  <div id="v-transfer" class="view">
+    <div class="page-hd">
+      <div><h2>Stock Transfer</h2><p>Transfer stock between stores</p></div>
+      <button class="btn btn-green" onclick="saveTransfer()">Save Transfer</button>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-left">New transfer</div></div>
+      <div class="card-body">
+        <div class="fgrid">
+          <div class="field"><label>Date</label><input type="date" id="tr-date"></div>
+          <div class="field"><label>From Store</label><select id="tr-from"><option value="">— select —</option></select></div>
+          <div class="field"><label>To Store</label><select id="tr-to"><option value="">— select —</option></select></div>
+          <div class="field"><label>Brand</label><select id="tr-brand"><option value="">— select brand —</option></select></div>
+          <div class="field"><label>Quantity (bottles)</label><input type="number" id="tr-qty" min="1" placeholder="0"></div>
+          <div class="field"><label>Reason / Notes</label><input type="text" id="tr-notes" placeholder="e.g. excess stock transfer"></div>
+        </div>
+        <div class="hint">Records transfer in both stores. From Store stock reduces, To Store stock increases. Both appear in Store Sales history.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-left">Transfer history</div></div>
+      <div class="tscroll"><table>
+        <thead><tr>
+          <th>Date</th><th>From Store</th><th>To Store</th><th>Brand</th>
+          <th class="r">Qty</th><th>Notes</th><th>Time</th>
+        </tr></thead>
+        <tbody id="tr-body"></tbody>
+      </table></div>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -552,13 +586,13 @@ async function checkConn(){
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────
-const TABS=['dashboard','entry','prices','stores','store-view','search','history'];
+const TABS=['dashboard','entry','prices','stores','store-view','search','history','transfer'];
 function go(id){
   document.querySelectorAll('.ntab').forEach((t,i)=>t.classList.toggle('on',TABS[i]===id));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+id));
   ({
     'dashboard':renderDash,'entry':renderEntry,'prices':renderPrices,
-    'stores':renderStores,'store-view':fillStoreSelects,'history':renderHistory
+    'stores':renderStores,'store-view':fillStoreSelects,'history':renderHistory,'transfer':renderTransfer
   })[id]?.();
 }
 
@@ -787,7 +821,8 @@ async function savePrices(){
   });
   load(true,'Saving prices…');
   try{
-    for(let i=0;i<rows.length;i+=20) await api('POST','prices',rows.slice(i,i+20),'on_conflict=brand');
+    await api('DELETE','prices','','brand=neq.DELETEME');
+    for(let i=0;i<rows.length;i+=20) await api('POST','prices',rows.slice(i,i+20));
     _prices={};
     await getPrices();
     load(false); toast('All prices saved','ok');
@@ -824,7 +859,8 @@ async function saveStores(){
   });
   load(true,'Saving stores…');
   try{
-    for(let i=0;i<stores.length;i+=20) await api('POST','stores',stores.slice(i,i+20),'on_conflict=code');
+    await api('DELETE','stores','','code=neq.DELETEME');
+    for(let i=0;i<stores.length;i+=20) await api('POST','stores',stores.slice(i,i+20));
     _stores=null; await getStores(); await fillStoreSelects();
     load(false); toast('Store register saved','ok');
   }catch(e){load(false);toast('Error: '+e.message,'err');}
@@ -962,6 +998,88 @@ function saveCurrentView(){
   else if(id==='prices') savePrices();
   else if(id==='stores') saveStores();
   else toast('Use the Save button inside this section');
+}
+
+
+// ── STOCK TRANSFER ────────────────────────────────────────────────────
+async function renderTransfer(){
+  document.getElementById('tr-date').value=td();
+  const stores=await getStores();
+  ['tr-from','tr-to'].forEach(id=>{
+    const sel=document.getElementById(id);
+    const cur=sel.value;
+    sel.innerHTML='<option value="">— select store —</option>';
+    stores.forEach(s=>{
+      const o=document.createElement('option');
+      o.value=s.code+'||'+(s.name||'');
+      o.textContent=s.code+' — '+(s.name||'')+(s.zone?' ('+s.zone+')':'');
+      sel.appendChild(o);
+    });
+    if(cur) sel.value=cur;
+  });
+  const bsel=document.getElementById('tr-brand');
+  bsel.innerHTML='<option value="">— select brand —</option>';
+  BRANDS.forEach(function(b){
+    const o=document.createElement('option');
+    o.value=b[0]; o.textContent=b[0]+' ('+b[1]+')';
+    bsel.appendChild(o);
+  });
+  await loadTransfers();
+}
+
+async function loadTransfers(){
+  try{
+    const rows=await api('GET','transfers','','select=*&order=created_at.desc&limit=300');
+    const tb=document.getElementById('tr-body');
+    tb.innerHTML='';
+    if(!rows.length){
+      tb.innerHTML='<tr><td colspan="7" class="empty"><p>No transfers yet.</p></td></tr>';
+      return;
+    }
+    rows.forEach(function(r){
+      const tr=tb.insertRow();
+      tr.innerHTML='<td>'+r.date+'</td>'
+        +'<td><b>'+r.from_store_code+'</b> '+r.from_store_name+'</td>'
+        +'<td><b>'+r.to_store_code+'</b> '+r.to_store_name+'</td>'
+        +'<td><b style="font-size:11px">'+r.brand+'</b></td>'
+        +'<td class="r">'+r.qty+'</td>'
+        +'<td>'+(r.notes||'')+'</td>'
+        +'<td style="font-size:11px;color:var(--text3)">'+(r.created_at?new Date(r.created_at).toLocaleString('en-IN'):'')+'</td>';
+    });
+  }catch(e){
+    document.getElementById('tr-body').innerHTML='<tr><td colspan="7" class="empty"><p>Run the SQL in Supabase first — see instructions.</p></td></tr>';
+  }
+}
+
+async function saveTransfer(){
+  const date=document.getElementById('tr-date').value;
+  const fromVal=document.getElementById('tr-from').value;
+  const toVal=document.getElementById('tr-to').value;
+  const brand=document.getElementById('tr-brand').value;
+  const qty=parseInt(document.getElementById('tr-qty').value)||0;
+  const notes=document.getElementById('tr-notes').value;
+  if(!date){toast('Pick a date','err');return;}
+  if(!fromVal){toast('Select From Store','err');return;}
+  if(!toVal){toast('Select To Store','err');return;}
+  if(fromVal===toVal){toast('From and To stores must be different','err');return;}
+  if(!brand){toast('Select a brand','err');return;}
+  if(qty<1){toast('Enter quantity greater than 0','err');return;}
+  const fc=fromVal.split('||')[0], fn=fromVal.split('||')[1]||'';
+  const tc=toVal.split('||')[0],   tn=toVal.split('||')[1]||'';
+  load(true,'Saving transfer...');
+  try{
+    await api('POST','transfers',[{date,from_store_code:fc,from_store_name:fn,to_store_code:tc,to_store_name:tn,brand,qty,notes}]);
+    document.getElementById('tr-qty').value='';
+    document.getElementById('tr-notes').value='';
+    document.getElementById('tr-brand').value='';
+    _entries=null;
+    await loadTransfers();
+    load(false);
+    toast(qty+' bottles of '+brand+' transferred: '+fc+' → '+tc,'ok');
+  }catch(e){
+    load(false);
+    toast('Error saving. Run the SQL in Supabase first.','err');
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────
