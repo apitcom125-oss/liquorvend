@@ -22,7 +22,6 @@
 html,body{height:100%}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
 
-/* APP SHELL */
 .shell{display:grid;grid-template-rows:56px 44px 1fr;height:100vh;overflow:hidden}
 .topbar{background:var(--navy);display:flex;align-items:center;padding:0 20px;gap:16px;justify-content:space-between}
 .topbar-brand{display:flex;align-items:center;gap:10px}
@@ -35,7 +34,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .dot.ok{background:#22c55e}
 .dot.err{background:#ef4444}
 
-/* BUTTONS */
 .btn{padding:6px 14px;border-radius:var(--r);border:none;cursor:pointer;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
 .btn:hover{filter:brightness(1.1)}
 .btn:active{transform:scale(.97)}
@@ -48,7 +46,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .btn-outline:hover{background:var(--alt);color:var(--text)}
 .btn-sm{padding:4px 10px;font-size:11px;border-radius:6px}
 
-/* NAV */
 .nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 20px}
 .nav::-webkit-scrollbar{display:none}
 .ntab{padding:0 14px;cursor:pointer;font-size:12px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;white-space:nowrap;height:44px;display:flex;align-items:center;gap:6px;transition:all .15s}
@@ -56,17 +53,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .ntab.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
 .ntab .n{font-size:10px;background:var(--blue-lt);color:var(--blue-dk);padding:1px 5px;border-radius:10px;font-weight:600}
 
-/* CONTENT AREA */
 .content{overflow-y:auto;padding:20px}
-.view{display:none;max-width:1400px;margin:0 auto}
+.view{display:none;max-width:1600px;margin:0 auto}
 .view.on{display:block}
 
-/* PAGE HEADER */
 .page-hd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px;flex-wrap:wrap}
 .page-hd h2{font-size:20px;font-weight:600}
 .page-hd p{font-size:12px;color:var(--text3);margin-top:2px}
 
-/* KPI GRID */
 .kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
 .kcard{background:var(--surface);border-radius:var(--rl);padding:16px;border:1px solid var(--border);position:relative;overflow:hidden}
 .kcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--rl) var(--rl) 0 0}
@@ -79,26 +73,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .kcard-val{font-size:24px;font-weight:700;line-height:1;font-family:'JetBrains Mono',monospace;color:var(--text)}
 .kcard-sub{font-size:11px;color:var(--text3);margin-top:4px}
 
-/* CARDS */
 .card{background:var(--surface);border-radius:var(--rl);border:1px solid var(--border);margin-bottom:14px;overflow:hidden}
 .card-hd{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:var(--alt)}
 .card-hd-left{display:flex;align-items:center;gap:8px}
 .card-body{padding:14px 16px}
 
-/* PERIOD PILLS */
 .periods{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .pill{padding:5px 12px;border-radius:20px;border:1px solid var(--border2);cursor:pointer;font-size:11px;font-weight:500;color:var(--text3);transition:all .15s}
 .pill:hover{border-color:var(--accent);color:var(--accent)}
 .pill.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-/* FORMS */
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
 .field input,.field select{padding:8px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:13px;font-family:'Inter',sans-serif;background:var(--white);color:var(--text);transition:border .15s}
 .field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,233,.1)}
 
-/* TABLES */
 .tscroll{overflow-x:auto;border-radius:var(--r)}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead th{background:var(--navy);color:#fff;padding:9px 10px;text-align:left;font-weight:500;font-size:11px;white-space:nowrap;position:sticky;top:0;z-index:2}
@@ -108,36 +98,32 @@ tbody td.r{text-align:right;font-family:'JetBrains Mono',monospace;font-size:11p
 tbody tr:nth-child(even) td{background:#fafbfd}
 tbody tr:hover td{background:#eef4fb}
 .grp-row td{background:var(--navy2)!important;color:#fff;font-weight:600;font-size:10px;padding:5px 10px;letter-spacing:.5px;text-transform:uppercase}
-td input{width:76px;padding:4px 6px;border:1px solid var(--border2);border-radius:5px;font-size:12px;text-align:right;font-family:'JetBrains Mono',monospace;background:#fffef5;color:var(--text)}
+
+/* FIX: wider inputs with better padding */
+td input{width:78px;padding:5px 7px;border:1px solid var(--border2);border-radius:5px;font-size:12px;text-align:right;font-family:'JetBrains Mono',monospace;background:#fffef5;color:var(--text)}
 td input:focus{outline:none;border-color:var(--accent);background:#fff}
 
-/* BADGES */
 .badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
 .b-blue{background:var(--blue-lt);color:var(--blue-dk)}
 .b-green{background:var(--green-lt);color:var(--green-dk)}
 .b-amber{background:var(--amber-lt);color:var(--amber-dk)}
 .b-purple{background:var(--purple-lt);color:var(--purple-dk)}
 
-/* BARS */
 .bar-row{margin-bottom:12px}
 .bar-top{display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px;font-weight:500}
 .bar-val{font-family:'JetBrains Mono',monospace}
 .bar-track{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
 .bar-fill{height:100%;border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
 
-/* CALC CELLS */
 .calc{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text3);padding:3px 5px;border-radius:3px}
 .calc.v{background:var(--green-lt);color:var(--green-dk);font-weight:500}
 
-/* GRID 2/3 */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
 @media(max-width:768px){.g2,.g3{grid-template-columns:1fr}}
 
-/* HINT */
 .hint{font-size:11px;color:var(--text3);margin-bottom:10px;padding:8px 12px;background:var(--blue-lt);border-radius:var(--r);line-height:1.6;border-left:3px solid var(--accent)}
 
-/* SPINNER / LOADING */
 .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 .overlay{position:fixed;inset:0;background:rgba(15,32,53,.55);z-index:9000;display:none;align-items:center;justify-content:center}
@@ -146,13 +132,11 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
 .overlay-box .spinner{border-color:rgba(15,32,53,.2);border-top-color:var(--navy);width:24px;height:24px;margin-bottom:12px}
 .overlay-box p{font-size:13px;font-weight:500;color:var(--text)}
 
-/* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:500;opacity:0;transition:all .3s;z-index:9999;pointer-events:none;white-space:nowrap;max-width:90vw}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.ok{background:var(--green-dk)}
 .toast.err{background:var(--red-dk)}
 
-/* EMPTY STATE */
 .empty{text-align:center;padding:40px 20px;color:var(--text3)}
 .empty p{font-size:13px;margin-top:6px}
 </style>
@@ -161,7 +145,6 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
 
 <div class="shell">
 
-<!-- TOP BAR -->
 <div class="topbar">
   <div class="topbar-brand">
     <div class="icon">🍶</div>
@@ -180,7 +163,6 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
   </div>
 </div>
 
-<!-- NAV -->
 <nav class="nav">
   <div class="ntab on" onclick="go('dashboard')">Dashboard</div>
   <div class="ntab" onclick="go('entry')">Brand Entry</div>
@@ -193,10 +175,9 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
   <div class="ntab" onclick="go('brands-mgr')">Brand Manager</div>
 </nav>
 
-<!-- CONTENT -->
 <div class="content">
 
-  <!-- ═══ DASHBOARD ═══ -->
+  <!-- DASHBOARD -->
   <div id="v-dashboard" class="view on">
     <div class="page-hd">
       <div>
@@ -237,7 +218,7 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
     </div>
   </div>
 
-  <!-- ═══ BRAND ENTRY ═══ -->
+  <!-- BRAND ENTRY -->
   <div id="v-entry" class="view">
     <div class="page-hd">
       <div><h2>Brand Entry</h2><p>Enter daily data per brand per store — type brand name in each row</p></div>
@@ -284,7 +265,7 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
     </div>
   </div>
 
-  <!-- ═══ PRICE MASTER ═══ -->
+  <!-- PRICE MASTER — FIXED: all 15 columns in header -->
   <div id="v-prices" class="view">
     <div class="page-hd">
       <div><h2>Price Master</h2><p>Set purchase price and sale price per brand — used for auto-calculation everywhere</p></div>
@@ -294,21 +275,28 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
     <div class="card">
       <div class="tscroll"><table>
         <thead><tr>
-          <th style="min-width:160px">Brand</th><th style="min-width:90px">Category</th>
-          <th class="r" style="background:#1a4e7a">750ml<br>PP(₹)</th><th class="r" style="background:#1a4e7a">750ml<br>SP(₹)</th>
-          <th class="r" style="background:#1a5e35">375ml<br>PP(₹)</th><th class="r" style="background:#1a5e35">375ml<br>SP(₹)</th>
-          <th class="r" style="background:#78350f">180ml<br>PP(₹)</th><th class="r" style="background:#78350f">180ml<br>SP(₹)</th>
-          <th class="r" style="background:#4c1d95">90ml<br>PP(₹)</th><th class="r" style="background:#4c1d95">90ml<br>SP(₹)</th>
-          <th class="r" style="background:#065f46">60ml<br>PP(₹)</th><th class="r" style="background:#065f46">60ml<br>SP(₹)</th>
-          <th class="r" style="background:#7f1d1d">Other<br>PP(₹)</th><th class="r" style="background:#7f1d1d">Other<br>SP(₹)</th>
-          <th class="r" style="background:#7f1d1d">Other<br>ml</th>
+          <th style="min-width:200px">Brand</th>
+          <th style="min-width:90px">Category</th>
+          <th class="r" style="background:#1a4e7a;min-width:80px">750ml<br>PP(₹)</th>
+          <th class="r" style="background:#1a4e7a;min-width:80px">750ml<br>SP(₹)</th>
+          <th class="r" style="background:#1a5e35;min-width:80px">375ml<br>PP(₹)</th>
+          <th class="r" style="background:#1a5e35;min-width:80px">375ml<br>SP(₹)</th>
+          <th class="r" style="background:#78350f;min-width:80px">180ml<br>PP(₹)</th>
+          <th class="r" style="background:#78350f;min-width:80px">180ml<br>SP(₹)</th>
+          <th class="r" style="background:#4c1d95;min-width:80px">90ml<br>PP(₹)</th>
+          <th class="r" style="background:#4c1d95;min-width:80px">90ml<br>SP(₹)</th>
+          <th class="r" style="background:#065f46;min-width:80px">60ml<br>PP(₹)</th>
+          <th class="r" style="background:#065f46;min-width:80px">60ml<br>SP(₹)</th>
+          <th class="r" style="background:#7f1d1d;min-width:80px">Other<br>PP(₹)</th>
+          <th class="r" style="background:#7f1d1d;min-width:80px">Other<br>SP(₹)</th>
+          <th class="r" style="background:#7f1d1d;min-width:70px">Other<br>ml</th>
         </tr></thead>
         <tbody id="pm-body"></tbody>
       </table></div>
     </div>
   </div>
 
-  <!-- ═══ STORE REGISTER ═══ -->
+  <!-- STORE REGISTER -->
   <div id="v-stores" class="view">
     <div class="page-hd">
       <div><h2>Store Register</h2><p>155 stores — fill once, shared across all devices</p></div>
@@ -325,7 +313,7 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
     </div>
   </div>
 
-  <!-- ═══ STORE SALES VIEW ═══ -->
+  <!-- STORE SALES VIEW -->
   <div id="v-store-view" class="view">
     <div class="page-hd">
       <div><h2>Store Sales</h2><p>View full sales breakdown for any store</p></div>
@@ -362,7 +350,7 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
     </div>
   </div>
 
-  <!-- ═══ SEARCH ═══ -->
+  <!-- SEARCH -->
   <div id="v-search" class="view">
     <div class="page-hd">
       <div><h2>Search</h2><p>Find any record across all stores and dates</p></div>
@@ -397,7 +385,7 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
     </div>
   </div>
 
-  <!-- ═══ HISTORY ═══ -->
+  <!-- HISTORY -->
   <div id="v-history" class="view">
     <div class="page-hd">
       <div><h2>History</h2><p id="hist-sub">All entries</p></div>
@@ -415,8 +403,6 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
       </table></div>
     </div>
   </div>
-
-
 
   <!-- BRAND MANAGER -->
   <div id="v-brands-mgr" class="view">
@@ -503,7 +489,6 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
 </div>
 </div>
 
-<!-- LOADING OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="overlay-box">
     <div class="spinner"></div>
@@ -514,12 +499,10 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────────
 const URL  = 'https://xrtglvlujugddegcxqtt.supabase.co';
 const KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydGdsdmx1anVnZGRlZ2N4cXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjQ2MTgsImV4cCI6MjA5MTMwMDYxOH0.gxi8lDsbvfR7FUHt-cvuh0aWmNG1Ax4DXBwvJhBd5-g';
 const H    = {'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+KEY,'Prefer':'return=representation'};
 
-// ── DATA ──────────────────────────────────────────────────────────────
 const BRANDS=[
   ["ALCOBREW SINGLE OAK PREMIUM WHISKY","Whisky"],
   ["GOLFERS SHOT 18 HOLE ULTRA PREMIUM BLENDED WHISKY","Whisky"],
@@ -1147,10 +1130,8 @@ const BRANDS=[
 const ZONES=["Zone A","Zone B","Zone C","Zone D","Zone E"];
 const N=155;
 
-// Cache
 let _entries=null, _prices={}, _stores=null;
 
-// ── SUPABASE API ──────────────────────────────────────────────────────
 async function api(method,table,body,qs=''){
   const res=await fetch(URL+'/rest/v1/'+table+(qs?'?'+qs:''),{
     method,headers:H,
@@ -1161,7 +1142,6 @@ async function api(method,table,body,qs=''){
   return t?JSON.parse(t):[];
 }
 
-// ── UTILS ─────────────────────────────────────────────────────────────
 function toast(msg,type='',ms=2800){
   const t=document.getElementById('toast');
   t.textContent=msg; t.className='toast '+type+' show';
@@ -1201,7 +1181,6 @@ function agg(rows){
   }),{qty:0,cash:0,card:0,upi:0,amt:0,open:0,close:0,cpp:0,csp:0,replen:0});
 }
 
-// ── DATA GETTERS ──────────────────────────────────────────────────────
 async function getEntries(force=false){
   if(_entries&&!force) return _entries;
   load(true,'Loading data…');
@@ -1234,7 +1213,6 @@ function defaultStores(){
   }));
 }
 
-// ── CONNECTION CHECK ──────────────────────────────────────────────────
 async function checkConn(){
   try{
     await api('GET','entries','','select=id&limit=1');
@@ -1247,7 +1225,6 @@ async function checkConn(){
   }
 }
 
-// ── NAV ───────────────────────────────────────────────────────────────
 const TABS=['dashboard','entry','prices','stores','store-view','search','history','transfer','brands-mgr'];
 function go(id){
   document.querySelectorAll('.ntab').forEach((t,i)=>t.classList.toggle('on',TABS[i]===id));
@@ -1258,7 +1235,6 @@ function go(id){
   })[id]?.();
 }
 
-// ── DASHBOARD ─────────────────────────────────────────────────────────
 let dPeriod='today';
 function setP(p,el){
   dPeriod=p;
@@ -1271,11 +1247,9 @@ async function renderDash(){
   const PLBL={'today':'Today','mtd':'This Month','prev':'Previous Month','ytd':'Year to Date','all':'All Time'};
   document.getElementById('dash-title').textContent=PLBL[dPeriod]+' — Dashboard';
   document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-
   const all=await getEntries();
   const rows=filterRows(all,dPeriod);
   const a=agg(rows);
-
   document.getElementById('dash-kpis').innerHTML=
     kc('Qty Sold',     num(a.qty),  'bottles','blue')+
     kc('Cash Sales',   inr(a.cash), '',       'green')+
@@ -1287,19 +1261,13 @@ async function renderDash(){
     kc('Replenishment',num(a.replen),'bottles','')+
     kc('Close @ PP',   inr(a.cpp),  'purchase price','')+
     kc('Close @ SP',   inr(a.csp),  'sale price','green');
-
   const mx=Math.max(a.cash,a.card,a.upi,1);
   document.getElementById('dash-bars').innerHTML=
-    bar('Cash',a.cash,mx,'#059669')+
-    bar('Card',a.card,mx,'#0ea5e9')+
-    bar('UPI', a.upi, mx,'#7c3aed');
-
+    bar('Cash',a.cash,mx,'#059669')+bar('Card',a.card,mx,'#0ea5e9')+bar('UPI',a.upi,mx,'#7c3aed');
   document.getElementById('dash-stock').innerHTML=
-    bar2('Open Stock', a.open,  Math.max(a.open,a.close,1),'#0ea5e9')+
-    bar2('Close Stock',a.close, Math.max(a.open,a.close,1),'#059669')+
+    bar2('Open Stock',a.open,Math.max(a.open,a.close,1),'#0ea5e9')+
+    bar2('Close Stock',a.close,Math.max(a.open,a.close,1),'#059669')+
     bar2('Replenishment',a.replen,Math.max(a.open,a.replen,1),'#d97706');
-
-  // Brand table
   const bm={};
   rows.forEach(r=>{
     if(!bm[r.brand]) bm[r.brand]={cat:r.category,qty:0,amt:0,open:0,close:0,cpp:0,csp:0,cash:0,card:0,upi:0};
@@ -1338,26 +1306,23 @@ function bar2(lbl,val,mx,color){
   return `<div class="bar-row"><div class="bar-top"><span>${lbl}</span><span class="bar-val">${num(val)} btls</span></div><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${color}"></div></div></div>`;
 }
 
-// ── BRAND ENTRY ───────────────────────────────────────────────────────
 async function renderEntry(){
   document.getElementById('be-date').value=td();
   await fillStoreSelects();
   await getPrices();
   const tb=document.getElementById('be-body');
   tb.innerHTML='';
-  // Add 10 blank rows by default
   for(let i=0;i<10;i++) addEntryRow();
 }
 
 function addEntryRow(){
   const tb=document.getElementById('be-body');
-  const rowNum=tb.rows.length+1;
   const tr=tb.insertRow();
   tr.className='entry-row';
   tr.innerHTML=`
     <td>
-      <input type="text" class="brand-input" placeholder="Type brand name..." 
-        style="width:200px;font-weight:600;font-size:11px" 
+      <input type="text" class="brand-input" placeholder="Type brand name..."
+        style="width:200px;font-weight:600;font-size:11px"
         oninput="onBrandInput(this)" autocomplete="off">
       <div class="brand-suggestions" style="display:none;position:absolute;background:#fff;border:1px solid var(--border2);border-radius:6px;z-index:100;max-height:180px;overflow-y:auto;min-width:220px;box-shadow:0 4px 12px rgba(0,0,0,.1)"></div>
     </td>
@@ -1402,41 +1367,32 @@ function clearEntryRows(){
 
 function onBrandInput(el){
   const val=el.value.trim().toUpperCase();
-  const row=el.closest('tr');
   const sugBox=el.nextElementSibling;
   if(val.length<2){sugBox.style.display='none';return;}
-  
-  // Get brands from prices or BRANDS array
-  const allBrands=Object.keys(_prices).length>0 ? Object.keys(_prices) : BRANDS.map(b=>b[0]);
+  const allBrands=Object.keys(_prices).length>0?Object.keys(_prices):BRANDS.map(b=>b[0]);
   const matches=allBrands.filter(b=>b.toUpperCase().includes(val)).slice(0,8);
-  
   if(!matches.length){sugBox.style.display='none';return;}
-  sugBox.innerHTML=matches.map(b=>`<div onclick="selectBrand(this,'${b.replace(/'/g,"\'")}','${(_prices[b]&&_prices[b].category)||''}')" 
+  sugBox.innerHTML=matches.map(b=>`<div onclick="selectBrand(this,'${b.replace(/'/g,"\\'")}','${(_prices[b]&&_prices[b].category)||''}')"
     style="padding:6px 10px;cursor:pointer;font-size:11px;border-bottom:0.5px solid #f0f3f7;font-weight:500"
     onmouseover="this.style.background='#e8f4fb'" onmouseout="this.style.background=''">${b}</div>`).join('');
-  
-  // Position suggestions
   sugBox.style.display='block';
   sugBox.style.position='absolute';
 }
 
-function selectBrand(el, brand, cat){
+function selectBrand(el,brand,cat){
   const sugBox=el.parentElement;
   const row=sugBox.closest('tr');
   row.querySelector('.brand-input').value=brand;
   sugBox.style.display='none';
-  // Auto-fill category
   if(cat){
     const catSel=row.querySelector('.cat-sel');
     for(let i=0;i<catSel.options.length;i++){
       if(catSel.options[i].value===cat||catSel.options[i].text===cat){catSel.selectedIndex=i;break;}
     }
   }
-  // Auto-calc
   crRow(row.querySelector('.ou'));
 }
 
-// Close suggestions when clicking outside
 document.addEventListener('click',function(e){
   if(!e.target.classList.contains('brand-input')){
     document.querySelectorAll('.brand-suggestions').forEach(s=>s.style.display='none');
@@ -1451,9 +1407,8 @@ function crRow(el){
   const ru=+tr.querySelector('.ru').value||0;
   const su=+tr.querySelector('.su').value||0;
   const cu=Math.max(0,ou+ru-su);
-  const qpp=+p.qpp||0, qsp=+p.qsp||0;
+  const qpp=+p.qpp||0,qsp=+p.qsp||0;
   const calcs=tr.querySelectorAll('.calc');
-  // calcs order: opp, osp, rpp, rsp, spp, ssp, cu, cv, cpp, csp
   function set(el,v){el.textContent=v?inr(v):'—';el.className='calc'+(v?' v':'');}
   set(calcs[0],ou*qpp); set(calcs[1],ou*qsp);
   set(calcs[2],ru*qpp); set(calcs[3],ru*qsp);
@@ -1461,8 +1416,6 @@ function crRow(el){
   calcs[6].textContent=cu; calcs[6].className='calc v';
   set(calcs[7],cu*qsp); set(calcs[8],cu*qpp); set(calcs[9],cu*qsp);
 }
-
-// cr() replaced by crRow()
 
 async function saveBrandEntry(){
   const date=document.getElementById('be-date').value;
@@ -1508,7 +1461,7 @@ async function saveBrandEntry(){
   }catch(e){load(false);toast('Error: '+e.message,'err');}
 }
 
-// ── PRICES ────────────────────────────────────────────────────────────
+// ── PRICE MASTER — FIXED ──────────────────────────────────────────────
 async function renderPrices(){
   await getPrices();
   const tb=document.getElementById('pm-body');
@@ -1518,20 +1471,22 @@ async function renderPrices(){
     if(cat!==lc){
       lc=cat;
       const s=tb.insertRow(); s.className='grp-row';
-      s.insertCell().colSpan=8; s.cells[0].textContent=cat;
+      s.insertCell().colSpan=15; s.cells[0].textContent=cat;
     }
     const p=_prices[brand]||{};
     const tr=tb.insertRow();
     tr.dataset.brand=brand;
+    const inp=(cls,val)=>`<input type="number" class="${cls}" value="${val||''}" min="0" placeholder="0" style="width:72px">`;
     tr.innerHTML=`
       <td><b style="font-size:11px">${brand}</b></td>
       <td><span class="badge b-blue">${cat}</span></td>
-      <td><input type="number" class="qpp" value="${p.qpp||''}" min="0" placeholder="0"></td>
-      <td><input type="number" class="qsp" value="${p.qsp||''}" min="0" placeholder="0"></td>
-      <td><input type="number" class="ppp" value="${p.ppp||''}" min="0" placeholder="0"></td>
-      <td><input type="number" class="psp" value="${p.psp||''}" min="0" placeholder="0"></td>
-      <td><input type="number" class="npp" value="${p.npp||''}" min="0" placeholder="0"></td>
-      <td><input type="number" class="nsp" value="${p.nsp||''}" min="0" placeholder="0"></td>
+      <td>${inp('qpp',p.qpp)}</td><td>${inp('qsp',p.qsp)}</td>
+      <td>${inp('ppp',p.ppp)}</td><td>${inp('psp',p.psp)}</td>
+      <td>${inp('npp',p.npp)}</td><td>${inp('nsp',p.nsp)}</td>
+      <td>${inp('n90pp',p.n90pp)}</td><td>${inp('n90sp',p.n90sp)}</td>
+      <td>${inp('n60pp',p.n60pp)}</td><td>${inp('n60sp',p.n60sp)}</td>
+      <td>${inp('opp',p.opp)}</td><td>${inp('osp',p.osp)}</td>
+      <td>${inp('oml',p.oml)}</td>
     `;
   });
 }
@@ -1540,14 +1495,21 @@ async function savePrices(){
   const rows=[];
   document.querySelectorAll('#pm-body tr[data-brand]').forEach(tr=>{
     const cat=BRANDS.find(b=>b[0]===tr.dataset.brand)?.[1]||'';
-    rows.push({brand:tr.dataset.brand,category:cat,
-      qpp:+tr.querySelector('.qpp').value||0, qsp:+tr.querySelector('.qsp').value||0,
-      ppp:+tr.querySelector('.ppp').value||0, psp:+tr.querySelector('.psp').value||0,
-      npp:+tr.querySelector('.npp').value||0, nsp:+tr.querySelector('.nsp').value||0,
-      n90pp:+tr.querySelector('.n90pp').value||0, n90sp:+tr.querySelector('.n90sp').value||0,
-      n60pp:+tr.querySelector('.n60pp').value||0, n60sp:+tr.querySelector('.n60sp').value||0,
-      opp:+tr.querySelector('.opp').value||0, osp:+tr.querySelector('.osp').value||0,
-      oml:+tr.querySelector('.oml').value||0,
+    rows.push({
+      brand:tr.dataset.brand, category:cat,
+      qpp:  +tr.querySelector('.qpp').value||0,
+      qsp:  +tr.querySelector('.qsp').value||0,
+      ppp:  +tr.querySelector('.ppp').value||0,
+      psp:  +tr.querySelector('.psp').value||0,
+      npp:  +tr.querySelector('.npp').value||0,
+      nsp:  +tr.querySelector('.nsp').value||0,
+      n90pp:+tr.querySelector('.n90pp').value||0,
+      n90sp:+tr.querySelector('.n90sp').value||0,
+      n60pp:+tr.querySelector('.n60pp').value||0,
+      n60sp:+tr.querySelector('.n60sp').value||0,
+      opp:  +tr.querySelector('.opp').value||0,
+      osp:  +tr.querySelector('.osp').value||0,
+      oml:  +tr.querySelector('.oml').value||0,
     });
   });
   load(true,'Saving prices…');
@@ -1560,7 +1522,6 @@ async function savePrices(){
   }catch(e){load(false);toast('Error: '+e.message,'err');}
 }
 
-// ── STORES ────────────────────────────────────────────────────────────
 async function renderStores(){
   const stores=await getStores();
   const tb=document.getElementById('sr-body');
@@ -1612,7 +1573,6 @@ async function fillStoreSelects(){
   });
 }
 
-// ── STORE SALES VIEW ──────────────────────────────────────────────────
 async function loadStoreView(){
   const sv=document.getElementById('sv-store').value;
   const period=document.getElementById('sv-period').value;
@@ -1654,7 +1614,6 @@ async function loadStoreView(){
   }catch(e){load(false);toast('Error: '+e.message,'err');}
 }
 
-// ── SEARCH ────────────────────────────────────────────────────────────
 function renderRows(rows,tbId){
   const tb=document.getElementById(tbId);
   tb.innerHTML='';
@@ -1690,7 +1649,6 @@ async function doSearch(){
 }
 document.getElementById('s-term').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
 
-// ── HISTORY ───────────────────────────────────────────────────────────
 async function renderHistory(){
   load(true,'Loading history…');
   try{
@@ -1701,7 +1659,6 @@ async function renderHistory(){
   }catch(e){load(false);toast('Error: '+e.message,'err');}
 }
 
-// ── CSV EXPORT ────────────────────────────────────────────────────────
 async function exportCSV(){
   load(true,'Preparing CSV…');
   try{
@@ -1721,7 +1678,6 @@ async function exportCSV(){
   }catch(e){load(false);toast('Error: '+e.message,'err');}
 }
 
-// ── CONTEXT SAVE ──────────────────────────────────────────────────────
 function saveCurrentView(){
   const on=document.querySelector('.view.on');
   const id=on?.id.replace('v-','');
@@ -1731,172 +1687,128 @@ function saveCurrentView(){
   else toast('Use the Save button inside this section');
 }
 
-
-
-// ── BRAND MANAGER ─────────────────────────────────────────────────────
 function getBrands(){
   try{
-    const stored = localStorage.getItem('lv_custom_brands');
+    const stored=localStorage.getItem('lv_custom_brands');
     if(stored) return JSON.parse(stored);
   }catch(e){}
-  // Return default BRANDS as objects
-  return BRANDS.map(function(b){ return {name:b[0],category:b[1],qsp:0,psp:0,nsp:0}; });
+  return BRANDS.map(function(b){return{name:b[0],category:b[1],qsp:0,psp:0,nsp:0};});
 }
 function saveBrandsLocal(brands){
-  localStorage.setItem('lv_custom_brands', JSON.stringify(brands));
-  // Also sync BRANDS array used by rest of app
+  localStorage.setItem('lv_custom_brands',JSON.stringify(brands));
   syncBrandsToApp(brands);
 }
 function syncBrandsToApp(brands){
-  // Update the global BRANDS array
-  BRANDS.length = 0;
-  brands.forEach(function(b){ BRANDS.push([b.name, b.category]); });
+  BRANDS.length=0;
+  brands.forEach(function(b){BRANDS.push([b.name,b.category]);});
 }
 
 async function renderBrandMgr(){
-  // Load from Supabase prices table + local
-  let brands = getBrands();
-  // Also try to load from Supabase prices
+  let brands=getBrands();
   try{
-    const rows = await api('GET','prices','','select=brand,category,qsp,psp,nsp&order=category.asc,brand.asc');
-    if(rows && rows.length > 0){
-      // Merge - Supabase is source of truth for prices
-      const sbMap = {};
-      rows.forEach(function(r){ sbMap[r.brand] = r; });
-      // Add any local brands not in Supabase
-      brands = rows.map(function(r){
-        return {name:r.brand, category:r.category||'Other', qsp:r.qsp||0, psp:r.psp||0, nsp:r.nsp||0};
-      });
+    const rows=await api('GET','prices','','select=brand,category,qsp,psp,nsp&order=category.asc,brand.asc');
+    if(rows&&rows.length>0){
+      brands=rows.map(function(r){return{name:r.brand,category:r.category||'Other',qsp:r.qsp||0,psp:r.psp||0,nsp:r.nsp||0};});
       saveBrandsLocal(brands);
     }
   }catch(e){}
-  
   renderBrandTable(brands);
-  document.getElementById('bm-count').textContent = brands.length + ' brands';
+  document.getElementById('bm-count').textContent=brands.length+' brands';
 }
 
 function renderBrandTable(brands){
-  const filter = (document.getElementById('bm-filter').value||'').toLowerCase();
-  const catFilter = document.getElementById('bm-cat-filter').value;
-  const tb = document.getElementById('bm-body');
-  tb.innerHTML = '';
-  let shown = 0;
-  brands.forEach(function(b, i){
-    if(filter && !b.name.toLowerCase().includes(filter)) return;
-    if(catFilter && b.category !== catFilter) return;
+  const filter=(document.getElementById('bm-filter').value||'').toLowerCase();
+  const catFilter=document.getElementById('bm-cat-filter').value;
+  const tb=document.getElementById('bm-body');
+  tb.innerHTML='';
+  let shown=0;
+  brands.forEach(function(b,i){
+    if(filter&&!b.name.toLowerCase().includes(filter)) return;
+    if(catFilter&&b.category!==catFilter) return;
     shown++;
-    const tr = tb.insertRow();
-    tr.dataset.idx = i;
-    tr.innerHTML = '<td style="color:var(--text3);font-size:11px">' + (i+1) + '</td>'
-      + '<td><input type="text" value="' + b.name.replace(/"/g,'&quot;') + '" data-field="name" data-idx="' + i + '" style="width:220px" onchange="updateBrand(this)"></td>'
-      + '<td><select data-field="category" data-idx="' + i + '" onchange="updateBrand(this)" style="width:110px">'
-      + ['Whisky','Rum','Vodka','Gin','Beer','Wine','Brandy','Cider','Country Liquor','Rtd','Spirits','Liquor','Other'].map(function(c){
-          return '<option' + (b.category===c?' selected':'') + '>' + c + '</option>';
+    const tr=tb.insertRow();
+    tr.dataset.idx=i;
+    tr.innerHTML='<td style="color:var(--text3);font-size:11px">'+(i+1)+'</td>'
+      +'<td><input type="text" value="'+b.name.replace(/"/g,'&quot;')+'" data-field="name" data-idx="'+i+'" style="width:220px" onchange="updateBrand(this)"></td>'
+      +'<td><select data-field="category" data-idx="'+i+'" onchange="updateBrand(this)" style="width:110px">'
+      +['Whisky','Rum','Vodka','Gin','Beer','Wine','Brandy','Cider','Country Liquor','Rtd','Spirits','Liquor','Other'].map(function(c){
+          return '<option'+(b.category===c?' selected':'')+'>'+c+'</option>';
         }).join('')
-      + '</select></td>'
-      + '<td><input type="number" value="' + (b.qsp||0) + '" data-field="qsp" data-idx="' + i + '" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
-      + '<td><input type="number" value="' + (b.psp||0) + '" data-field="psp" data-idx="' + i + '" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
-      + '<td><input type="number" value="' + (b.nsp||0) + '" data-field="nsp" data-idx="' + i + '" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
-      + '<td style="text-align:center"><button class="btn btn-sm" style="background:var(--red);color:#fff;font-size:11px" onclick="deleteBrand(' + i + ')">Delete</button></td>';
+      +'</select></td>'
+      +'<td><input type="number" value="'+(b.qsp||0)+'" data-field="qsp" data-idx="'+i+'" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
+      +'<td><input type="number" value="'+(b.psp||0)+'" data-field="psp" data-idx="'+i+'" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
+      +'<td><input type="number" value="'+(b.nsp||0)+'" data-field="nsp" data-idx="'+i+'" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
+      +'<td style="text-align:center"><button class="btn btn-sm" style="background:var(--red);color:#fff;font-size:11px" onclick="deleteBrand('+i+')">Delete</button></td>';
   });
-  document.getElementById('bm-count').textContent = brands.length + ' brands (' + shown + ' shown)';
+  document.getElementById('bm-count').textContent=brands.length+' brands ('+shown+' shown)';
 }
 
-function filterBrands(){
-  renderBrandTable(getBrands());
-}
+function filterBrands(){ renderBrandTable(getBrands()); }
 
 function updateBrand(el){
-  const brands = getBrands();
-  const idx = parseInt(el.dataset.idx);
-  const field = el.dataset.field;
+  const brands=getBrands();
+  const idx=parseInt(el.dataset.idx);
+  const field=el.dataset.field;
   if(isNaN(idx)||!field) return;
-  if(field === 'name' || field === 'category'){
-    brands[idx][field] = el.value;
-  } else {
-    brands[idx][field] = parseFloat(el.value)||0;
-  }
+  if(field==='name'||field==='category') brands[idx][field]=el.value;
+  else brands[idx][field]=parseFloat(el.value)||0;
   saveBrandsLocal(brands);
-  // Save to Supabase in background
   saveBrandToSupabase(brands[idx]);
 }
 
 async function saveBrandToSupabase(brand){
   try{
     await api('POST','prices',[{
-      brand: brand.name,
-      category: brand.category,
-      qpp: brand.qpp||0, qsp: brand.qsp||0,
-      ppp: brand.ppp||0, psp: brand.psp||0,
-      npp: brand.npp||0, nsp: brand.nsp||0
+      brand:brand.name,category:brand.category,
+      qpp:brand.qpp||0,qsp:brand.qsp||0,
+      ppp:brand.ppp||0,psp:brand.psp||0,
+      npp:brand.npp||0,nsp:brand.nsp||0
     }],'on_conflict=brand');
-  }catch(e){ /* silent */ }
+  }catch(e){}
 }
 
 async function addBrand(){
-  const name = document.getElementById('bm-name').value.trim().toUpperCase();
-  const cat  = document.getElementById('bm-cat').value;
-  const qsp  = parseFloat(document.getElementById('bm-qsp').value)||0;
-  const psp  = parseFloat(document.getElementById('bm-psp').value)||0;
-  const nsp  = parseFloat(document.getElementById('bm-nsp').value)||0;
-  if(!name){ toast('Enter a brand name','err'); return; }
-  
-  const brands = getBrands();
-  if(brands.find(function(b){ return b.name===name; })){
-    toast('Brand already exists','err'); return;
-  }
-  
-  const newBrand = {name, category:cat, qsp, psp, nsp, qpp:0, ppp:0, npp:0};
+  const name=document.getElementById('bm-name').value.trim().toUpperCase();
+  const cat=document.getElementById('bm-cat').value;
+  const qsp=parseFloat(document.getElementById('bm-qsp').value)||0;
+  const psp=parseFloat(document.getElementById('bm-psp').value)||0;
+  const nsp=parseFloat(document.getElementById('bm-nsp').value)||0;
+  if(!name){toast('Enter a brand name','err');return;}
+  const brands=getBrands();
+  if(brands.find(function(b){return b.name===name;})){toast('Brand already exists','err');return;}
+  const newBrand={name,category:cat,qsp,psp,nsp,qpp:0,ppp:0,npp:0};
   brands.push(newBrand);
   saveBrandsLocal(brands);
-  
-  // Save to Supabase
   load(true,'Adding brand...');
   try{
     await api('POST','prices',[{brand:name,category:cat,qpp:0,qsp,ppp:0,psp,npp:0,nsp}],'on_conflict=brand');
-    load(false);
-    toast(name + ' added','ok');
-  }catch(e){ load(false); toast('Saved locally. Supabase sync failed.'); }
-  
-  // Clear form
-  document.getElementById('bm-name').value = '';
-  document.getElementById('bm-qsp').value = '';
-  document.getElementById('bm-psp').value = '';
-  document.getElementById('bm-nsp').value = '';
-  
+    load(false); toast(name+' added','ok');
+  }catch(e){load(false);toast('Saved locally. Supabase sync failed.');}
+  document.getElementById('bm-name').value='';
+  document.getElementById('bm-qsp').value='';
+  document.getElementById('bm-psp').value='';
+  document.getElementById('bm-nsp').value='';
   renderBrandMgr();
 }
 
 async function deleteBrand(idx){
-  const brands = getBrands();
-  const brand = brands[idx];
-  if(!confirm('Delete "' + brand.name + '"? This cannot be undone.')) return;
-  
+  const brands=getBrands();
+  const brand=brands[idx];
+  if(!confirm('Delete "'+brand.name+'"? This cannot be undone.')) return;
   load(true,'Deleting...');
-  try{
-    await api('DELETE','prices','','brand=eq.' + encodeURIComponent(brand.name));
-  }catch(e){ /* continue */ }
-  
-  brands.splice(idx, 1);
+  try{ await api('DELETE','prices','','brand=eq.'+encodeURIComponent(brand.name)); }catch(e){}
+  brands.splice(idx,1);
   saveBrandsLocal(brands);
   load(false);
-  toast(brand.name + ' deleted','ok');
+  toast(brand.name+' deleted','ok');
   renderBrandMgr();
 }
 
-// On app init — load custom brands if saved
 (function initBrands(){
-  const stored = localStorage.getItem('lv_custom_brands');
-  if(stored){
-    try{
-      const brands = JSON.parse(stored);
-      syncBrandsToApp(brands);
-    }catch(e){}
-  }
+  const stored=localStorage.getItem('lv_custom_brands');
+  if(stored){try{syncBrandsToApp(JSON.parse(stored));}catch(e){}}
 })();
 
-
-// ── STOCK TRANSFER ────────────────────────────────────────────────────
 async function renderTransfer(){
   document.getElementById('tr-date').value=td();
   const stores=await getStores();
@@ -1927,10 +1839,7 @@ async function loadTransfers(){
     const rows=await api('GET','transfers','','select=*&order=created_at.desc&limit=300');
     const tb=document.getElementById('tr-body');
     tb.innerHTML='';
-    if(!rows.length){
-      tb.innerHTML='<tr><td colspan="7" class="empty"><p>No transfers yet.</p></td></tr>';
-      return;
-    }
+    if(!rows.length){tb.innerHTML='<tr><td colspan="7" class="empty"><p>No transfers yet.</p></td></tr>';return;}
     rows.forEach(function(r){
       const tr=tb.insertRow();
       tr.innerHTML='<td>'+r.date+'</td>'
@@ -1942,7 +1851,7 @@ async function loadTransfers(){
         +'<td style="font-size:11px;color:var(--text3)">'+(r.created_at?new Date(r.created_at).toLocaleString('en-IN'):'')+'</td>';
     });
   }catch(e){
-    document.getElementById('tr-body').innerHTML='<tr><td colspan="7" class="empty"><p>Run the SQL in Supabase first — see instructions.</p></td></tr>';
+    document.getElementById('tr-body').innerHTML='<tr><td colspan="7" class="empty"><p>Run the SQL in Supabase first.</p></td></tr>';
   }
 }
 
@@ -1959,8 +1868,8 @@ async function saveTransfer(){
   if(fromVal===toVal){toast('From and To stores must be different','err');return;}
   if(!brand){toast('Select a brand','err');return;}
   if(qty<1){toast('Enter quantity greater than 0','err');return;}
-  const fc=fromVal.split('||')[0], fn=fromVal.split('||')[1]||'';
-  const tc=toVal.split('||')[0],   tn=toVal.split('||')[1]||'';
+  const fc=fromVal.split('||')[0],fn=fromVal.split('||')[1]||'';
+  const tc=toVal.split('||')[0],  tn=toVal.split('||')[1]||'';
   load(true,'Saving transfer...');
   try{
     await api('POST','transfers',[{date,from_store_code:fc,from_store_name:fn,to_store_code:tc,to_store_name:tn,brand,qty,notes}]);
@@ -1971,13 +1880,9 @@ async function saveTransfer(){
     await loadTransfers();
     load(false);
     toast(qty+' bottles of '+brand+' transferred: '+fc+' → '+tc,'ok');
-  }catch(e){
-    load(false);
-    toast('Error saving. Run the SQL in Supabase first.','err');
-  }
+  }catch(e){load(false);toast('Error saving. Run the SQL in Supabase first.','err');}
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────
 checkConn();
 fillStoreSelects();
 renderDash();
