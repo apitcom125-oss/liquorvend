@@ -190,6 +190,7 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
   <div class="ntab" onclick="go('search')">Search</div>
   <div class="ntab" onclick="go('history')">History</div>
   <div class="ntab" onclick="go('transfer')">Stock Transfer</div>
+  <div class="ntab" onclick="go('brands-mgr')">Brand Manager</div>
 </nav>
 
 <!-- CONTENT -->
@@ -408,6 +409,57 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
   </div>
 
 
+
+  <!-- BRAND MANAGER -->
+  <div id="v-brands-mgr" class="view">
+    <div class="page-hd">
+      <div><h2>Brand Manager</h2><p>Add, edit or delete brands. Changes apply across the whole app instantly.</p></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-hd-left">Add new brand</div></div>
+      <div class="card-body">
+        <div class="fgrid">
+          <div class="field"><label>Brand Name</label><input type="text" id="bm-name" placeholder="e.g. ROYAL STAG"></div>
+          <div class="field"><label>Category</label>
+            <select id="bm-cat">
+              <option>Whisky</option><option>Rum</option><option>Vodka</option>
+              <option>Gin</option><option>Beer</option><option>Wine</option>
+              <option>Brandy</option><option>Cider</option><option>Country Liquor</option>
+              <option>Rtd</option><option>Spirits</option><option>Liquor</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>750ml MRP (₹)</label><input type="number" id="bm-qsp" placeholder="0" min="0"></div>
+          <div class="field"><label>375ml MRP (₹)</label><input type="number" id="bm-psp" placeholder="0" min="0"></div>
+          <div class="field"><label>180ml MRP (₹)</label><input type="number" id="bm-nsp" placeholder="0" min="0"></div>
+          <div class="field"><label>&nbsp;</label><button class="btn btn-green" onclick="addBrand()">Add Brand</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-hd-left">All brands <span id="bm-count" style="font-size:11px;color:var(--text3);font-weight:400"></span></div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input type="text" id="bm-filter" placeholder="Filter brands..." style="padding:6px 10px;border:1px solid var(--border2);border-radius:6px;font-size:12px;width:180px" oninput="filterBrands()">
+          <select id="bm-cat-filter" onchange="filterBrands()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:6px;font-size:12px">
+            <option value="">All categories</option>
+            <option>Whisky</option><option>Rum</option><option>Vodka</option>
+            <option>Gin</option><option>Beer</option><option>Wine</option>
+            <option>Brandy</option><option>Cider</option><option>Country Liquor</option>
+            <option>Rtd</option><option>Spirits</option><option>Liquor</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="tscroll"><table>
+        <thead><tr>
+          <th>#</th><th style="min-width:200px">Brand Name</th><th>Category</th>
+          <th class="r">750ml SP (₹)</th><th class="r">375ml SP (₹)</th><th class="r">180ml SP (₹)</th>
+          <th style="text-align:center">Action</th>
+        </tr></thead>
+        <tbody id="bm-body"></tbody>
+      </table></div>
+    </div>
+  </div>
+
   <!-- STOCK TRANSFER -->
   <div id="v-transfer" class="view">
     <div class="page-hd">
@@ -461,26 +513,628 @@ const H    = {'Content-Type':'application/json','apikey':KEY,'Authorization':'Be
 
 // ── DATA ──────────────────────────────────────────────────────────────
 const BRANDS=[
-  ["BLACK LABEL 12YR","Scotch"],["BLACK LABEL 18YR","Scotch"],
-  ["JOHNNIE WALKER RED","Scotch"],["JOHNNIE WALKER BLACK","Scotch"],
-  ["CHIVAS REGAL 12YR","Scotch"],["GLENFIDDICH 12YR","Scotch"],
-  ["JACK DANIEL'S","Scotch"],["GRANT'S","Scotch"],["SINGLETON","Scotch"],
-  ["BOMBAY SAPPHIRE","Gin"],["HENDRICK'S GIN","Gin"],["GORDON'S GIN","Gin"],["BEEFEATER GIN","Gin"],
-  ["LAL RED LABEL","Indian Whisky"],["ANTIQUITY BLUE","Indian Whisky"],
-  ["PAUL JOHN","Indian Whisky"],["BALLANTINE'S","Indian Whisky"],
-  ["WILLIAM LAWSON","Indian Whisky"],["SOLAN GOLD","Indian Whisky"],
-  ["INDRI","Indian Whisky"],["BLACK DOG DELUXE 12YR","Indian Whisky"],
-  ["100 PIPER","Indian Whisky"],["TEACHER'S","Indian Whisky"],
-  ["VAT 69","Indian Whisky"],["SIGNATURE","Indian Whisky"],
-  ["SMIRNOFF","Indian Whisky"],["WHISTLER","Indian Whisky"],
-  ["OLD MONK","Rum"],["OLD MONK AMBER","Rum"],["OLD MONK LEGEND","Rum"],
-  ["BACARDI WHITE","Rum"],["BACARDI BLACK","Rum"],
-  ["CAPTAIN MORGAN","Rum"],["EPISODE RUM","Rum"],
-  ["KNIGHT VODKA FT","Vodka"],["KNIGHT VODKA P","Vodka"],["BELVEDERE VODKA","Vodka"],
-  ["ROYAL STAG","Economy"],["ROYAL CHALLENGE","Economy"],["ROYAL GREEN","Economy"],
-  ["ALL SEASONS","Economy"],["WOODSMEN","Economy"],["SOLAN BLACK","Economy"],
-  ["SOLAN NO.1","Economy"],["IMP BLUE","Economy"],["KNIGHT STROM","Economy"],
-  ["O.C. BLUE","Economy"],["EPISODE","Economy"],["MAGIC MOMENT","Economy"],["DOUBLE BLUE","Economy"]
+  ["ALCOBREW SINGLE OAK PREMIUM WHISKY","Whisky"],
+  ["GOLFERS SHOT 18 HOLE ULTRA PREMIUM BLENDED WHISKY","Whisky"],
+  ["GOLFER'S SHOT BARREL AGED WHISKY","Whisky"],
+  ["GOLFER'S SHOT BARREL RESERVE WHISKY","Whisky"],
+  ["LION DADDY ORIGINAL DARK RUM","Rum"],
+  ["OLD SMUGGLER BLENDED SCOTCH WHISKY","Whisky"],
+  ["OLD SMUGGLER MATURE XXX RUM","Rum"],
+  ["ONE MORE PURE CRAFT VODKA","Vodka"],
+  ["ONE MORE PURE CRAFT VODKA GREEN APPLE","Vodka"],
+  ["VICTORIO RESERVE BRANDY XO BLENDED WITH FRENCH GRAPE SPIRIT","Brandy"],
+  ["WHITE & BLUE PREMIUM WHISKY","Whisky"],
+  ["FOREVER PREMIUM WHISKY","Whisky"],
+  ["NAATI NO 1 COFFEE XXX","Country Liquor"],
+  ["NAATI NO 1 SANTRA","Country Liquor"],
+  ["NAATI NO 1 SAUNFI","Country Liquor"],
+  ["ROYAL PLAYER PREMIUM GRAIN WHISKY","Whisky"],
+  ["ROYAL PLAYER WHISKY","Whisky"],
+  ["MACROYS BLENDED SCOTCH WHISKY","Whisky"],
+  ["MACROYS EXTRA PEAT BLENDED SCOTCH WHISKY","Whisky"],
+  ["MACROYS SHERRY CASK FINISH BLENDED SCOTCH WHISKY","Whisky"],
+  ["MACROYS SHERRY FINISH BLENDED SCOTCH WHISKY","Whisky"],
+  ["MACROYS SPECIAL RESERVE BLENDED SCOTCH WHISKY","Whisky"],
+  ["MALIKA GRAPES WINE","Wine"],
+  ["POWER WINE","Wine"],
+  ["ROYAL TOUCH APPLE WINE","Wine"],
+  ["BULLDOG LONDON DRY GIN","Gin"],
+  ["SKYY VODKA","Vodka"],
+  ["CHANSHAL APPLE WINE","Wine"],
+  ["CHANSHAL APPLE WINE 650ML","Wine"],
+  ["SEB APPLE CIDER","Cider"],
+  ["SEB APPLE WINE","Wine"],
+  ["APPLE CIDER","Cider"],
+  ["APPLE WINE","Wine"],
+  ["RED WINE PINOT NOIR","Wine"],
+  ["TIBSY OG APPLE CIDER","Cider"],
+  ["TIBSY YOLO MIX FRUIT","Cider"],
+  ["HERA RARE WHISKY","Whisky"],
+  ["HERITAGE THOUSAND OAKS RESERVE WHISKY","Whisky"],
+  ["SUBMARINE ADVENTURE RUM","Rum"],
+  ["BLACK BOW HIMALAYAN WHISKEY","Whisky"],
+  ["WOODSMEN BLACKK BARREL WHISKEY","Whisky"],
+  ["WOODSMEN EXTRA SMOOTH WHISKEY MADE IN INDIA","Whisky"],
+  ["WOODSMEN EXTRA SMOOTH WHISKY","Whisky"],
+  ["WOODSMEN MOUNTAIN WHISKEY","Whisky"],
+  ["WOODSMEN MOUNTAIN WHISKEY MADE IN THE HIMALAYAS","Whisky"],
+  ["WOODSMEN PEATED INDIAN WHISKEY","Whisky"],
+  ["WOODSMEN TRULY SMOOTH WHISKY","Whisky"],
+  ["GOLD HOME APPLE CIDER","Cider"],
+  ["GOLD HOME APPLE WINE","Wine"],
+  ["GOLD HOME APRICOT WINE","Wine"],
+  ["GOLD HOME CHERRY WINE","Wine"],
+  ["GOLD HOME CRANBERRY MAD BRISA SPARKLING WINE","Wine"],
+  ["GOLD HOME D-CODE APPLE SPARKLING WINE","Wine"],
+  ["GOLD HOME GALA APPLE WINE","Wine"],
+  ["GOLD HOME GINGER ALE","Cider"],
+  ["GOLD HOME GINGER WINE","Wine"],
+  ["GOLD HOME GUAVA MAD BRISA SPARKLING WINE","Wine"],
+  ["GOLD HOME KIWI WINE","Wine"],
+  ["GOLD HOME LITCHI MAD BRISA SPARKLING WINE","Wine"],
+  ["GOLD HOME NECTAR RHODO WINE","Wine"],
+  ["GOLD HOME ORANGE MAD BRISA SPARKLING WINE","Wine"],
+  ["GOLD HOME PASSION FRUIT BREEZY SPARKLING WINE","Wine"],
+  ["GOLD HOME PEACH WINE","Wine"],
+  ["GOLD HOME PEAR WINE","Wine"],
+  ["GOLD HOME PERRY","Cider"],
+  ["GOLD HOME PLUM WINE","Wine"],
+  ["GOLD HOME QUEEN STRAWBERRY WINE","Wine"],
+  ["GOLD HOME RED WINE","Wine"],
+  ["GOLD HOME RHODODENDRON WINE","Wine"],
+  ["GOLD HOME ROSE WINE","Wine"],
+  ["GOLD HOME SANTA PLUM WINE","Wine"],
+  ["GOLD HOME STRAWBERRY WINE","Wine"],
+  ["GOLD HOME SWAN PEACH WINE","Wine"],
+  ["GOLD HOME WHITE WINE","Wine"],
+  ["PURE SANTRA","Country Liquor"],
+  ["HAWK EYE APPLE CIDER","Cider"],
+  ["HAWK EYE APPLE WINE","Wine"],
+  ["HAWK EYE APRICOT WINE","Wine"],
+  ["HAWK EYE CHERRY WINE","Wine"],
+  ["HAWK EYE GINGER ALE","Cider"],
+  ["HAWK EYE GINGER WINE","Wine"],
+  ["HAWK EYE KIWI WINE","Wine"],
+  ["HAWK EYE PEACH WINE","Wine"],
+  ["HAWK EYE PEAR CIDER","Cider"],
+  ["HAWK EYE PEAR WINE","Wine"],
+  ["HAWK EYE PLUM WINE","Wine"],
+  ["HAWK EYE RED WINE","Wine"],
+  ["HAWK EYE RHODODENDRON WINE","Wine"],
+  ["HAWK EYE STRAWBERRY WINE","Wine"],
+  ["HAWK EYE WHITE WINE","Wine"],
+  ["HILL THRILL AMLA HONEY WINE","Wine"],
+  ["HILL THRILL APPLE HONEY WINE","Wine"],
+  ["HILL THRILL BLACK BERRY WINE","Wine"],
+  ["HILL THRILL CHERRY WINE","Wine"],
+  ["HILL THRILL ENGLISH TOFFEE APPLE CIDER","Cider"],
+  ["HILL THRILL GINGER HONEY WINE","Wine"],
+  ["HILL THRILL NASPATI SPARKLING WINE","Wine"],
+  ["HILL THRILL PEACH SPARKLING WINE 330 ML","Wine"],
+  ["HILL THRILL PEACH WINE","Wine"],
+  ["HILL THRILL PLUM WINE","Wine"],
+  ["HILL THRILL RED WINE CABERNET","Wine"],
+  ["HILL THRILL RHODODENDRON WINE","Wine"],
+  ["CHANTILLI SHIRAZ RED WINE","Wine"],
+  ["COCHILOCO APPLE CIDER","Cider"],
+  ["VIN BALLET APPLE WINE","Wine"],
+  ["VIN BALLET APRICOT WINE","Wine"],
+  ["VIN BALLET PEACH WINE","Wine"],
+  ["ARKA HONEY DESSERT","Wine"],
+  ["ARKA ROSE DESSERT","Wine"],
+  ["AURI","Wine"],
+  ["BASPA APPLE","Wine"],
+  ["BASPA APRICOT","Wine"],
+  ["BASPA CABERNET SAUVIGNON","Wine"],
+  ["BASPA CABERNET SHIRAZ","Wine"],
+  ["BASPA KIWI","Wine"],
+  ["BASPA PEACH","Wine"],
+  ["BASPA PLUM","Wine"],
+  ["BASPA RHODODENDRON","Wine"],
+  ["BASPA STRAWBERRY","Wine"],
+  ["BAZOOCA APPLE CIDER","Cider"],
+  ["B & CO","Cider"],
+  ["B & CO HOPPED","Cider"],
+  ["BEAR","Cider"],
+  ["BEAR APPLE CIDER","Cider"],
+  ["BEAR EXTRA STRONG","Wine"],
+  ["BEAR STRONG","Cider"],
+  ["CIDER TEA","Cider"],
+  ["FIA","Wine"],
+  ["JUNEO RED","Wine"],
+  ["JUNEO ROSE","Wine"],
+  ["JUNEO WHITE BLEND","Wine"],
+  ["MAJESTY","Wine"],
+  ["FOREST WINE BARNA BLUSH PLUM WINE 750 ML","Wine"],
+  ["FOREST WINE BARNA CLASSIC RED MOSCATO WINE 750 ML","Wine"],
+  ["FOREST WINE BARNA GOLD EDITION CABERNET SAUVIGNON WINE 750 ML","Wine"],
+  ["FOREST WINE BARNA GOLD EDITION CABERNET SHIRAZ WNE 750 ML","Wine"],
+  ["FOREST WINE BARNA GOLD EDITION SHIRAZ WINE 750 ML","Wine"],
+  ["FOREST WINE BARNA HONEY APPLE WINE 750 ML AND 375 ML","Wine"],
+  ["FOREST WINE BARNA MELLOW MANGO WINE 750 ML AND 375 ML","Wine"],
+  ["FOREST WINE BARNA RHODODENDRON WINE 750 ML AND 375 ML","Wine"],
+  ["KALPA APPLE WINE","Wine"],
+  ["KALPA APRICOT WINE","Wine"],
+  ["KALPA KIWI WINE","Wine"],
+  ["KALPA MANGO WINE","Wine"],
+  ["KALPA ORANGE WINE","Wine"],
+  ["KALPA PLUM WINE","Wine"],
+  ["KALPA RED WINE","Wine"],
+  ["KALPA RHODO WINE","Wine"],
+  ["KALPA STRAWBERRY WINE","Wine"],
+  ["HIM SANTRA","Country Liquor"],
+  ["LOVELY LIME","Country Liquor"],
+  ["ORANGE","Country Liquor"],
+  ["UNA NO.1","Country Liquor"],
+  ["UNA NO.1 SANTRA","Country Liquor"],
+  ["UNA NO.1 XXX","Country Liquor"],
+  ["DEE WINE RED RESERVA","Wine"],
+  ["DEEWINE WILD 15 ELITE","Wine"],
+  ["JOLLY MAKER CIDER","Cider"],
+  ["JOLLY MAKER LITCHI FRUIT WINE","Wine"],
+  ["JOLLY MAKER SCINTILLATING APPLE WINE","Wine"],
+  ["JOLLY MAKER SCINTILLATING LITCHI WINE","Wine"],
+  ["JOLLY MAKER SCINTILLATING PEAR WINE","Wine"],
+  ["JOLLY MAKER STRIDER","Wine"],
+  ["HIMACHALI SANTRA","Country Liquor"],
+  ["HIMACHALI SAUNFI","Country Liquor"],
+  ["HILL'S CHOICE APPLE CIDER","Cider"],
+  ["HILL'S CHOICE APPLE WINE","Wine"],
+  ["HILL'S CHOICE CARBONATED APPLE WINE","Wine"],
+  ["HILL'S CHOICE LITCHI CARBONATED WINE","Wine"],
+  ["HILL'S CHOICE LITCHI WINE","Wine"],
+  ["HILL'S CHOICE MEAD APPLE CARBONATED WINE","Wine"],
+  ["HILL'S CHOICE MEAD CARBONATED WINE","Wine"],
+  ["HILL'S CHOICE PLUM CARBONATED WINE","Wine"],
+  ["HILL'S CHOICE PLUM WINE","Wine"],
+  ["HILL'S CHOICE RED WINE","Wine"],
+  ["HILL'S CHOICE RHODODENDRON WINE","Wine"],
+  ["SIMRA APPLE WINE PREMIUM","Wine"],
+  ["SIMRA RED WINE PREMIUM","Wine"],
+  ["SIMRA RHODODENDRON WINE","Wine"],
+  ["SIMRA WHITE WINE PREMIUM","Wine"],
+  ["ABRAU APPLE CIDER LAMBRUSCO","Cider"],
+  ["ABRAU APPLE CIDER MUSCAT","Cider"],
+  ["CIDERKICK SPARKLING PERRY","Cider"],
+  ["MINCHY'S CIDEKICK SPARKLING APPLE CIDER","Cider"],
+  ["MINCHY'S CIDEKICK SPARKLING CHERRY CIDER","Cider"],
+  ["MINCHY'S CIDEKICK SPARKLING ORANGE CIDER","Cider"],
+  ["MINCHY'S CIDERKICK SPARKLING APPLE CIDER","Cider"],
+  ["MINCHY'S CIDERKICK SPARKLING CHERRY CIDER","Cider"],
+  ["MINCHY'S CIDERKICK SPARKLING ORANGE CIDER","Cider"],
+  ["THE SHIMLA WYNE CO. AIRY APPLE","Wine"],
+  ["THE SHIMLA WYNE CO. MOODY MANGO","Wine"],
+  ["THE SHIMLA WYNE CO. PERKY PEACH","Wine"],
+  ["THE SHIMLA WYNE CO. ROSY RHODO","Wine"],
+  ["WONDER WYNE APPLE WINE","Wine"],
+  ["WONDER WYNE APRICOT WINE","Wine"],
+  ["WONDER WYNE GINGER ALE","Cider"],
+  ["WONDER WYNE GRAPE WINE","Wine"],
+  ["WONDER WYNE KIWI WINE","Wine"],
+  ["WONDER WYNE PEACH WINE","Wine"],
+  ["WONDER WYNE PEAR WINE","Wine"],
+  ["WONDER WYNE PLUM WINE","Wine"],
+  ["WONDER WYNE RESERVE BLACK BERRY WINE","Wine"],
+  ["WONDER WYNE RESERVE BLUE BERRY WINE","Wine"],
+  ["WONDER WYNE RESERVE CABERNET SAUVIGNON GRAPE","Wine"],
+  ["WONDER WYNE RESERVE CRANBERRY WINE","Wine"],
+  ["WONDER WYNE RESERVE ROYAL APPLE","Wine"],
+  ["WONDER WYNE RESERVE SANTA ROSA PLUM","Wine"],
+  ["WONDER WYNE RHODO WINE","Wine"],
+  ["WONDER WYNE SPARKLING APPLE WINE","Wine"],
+  ["WONDER WYNE SPARKLING PEAR WINE","Wine"],
+  ["WONDER WYNE STRAWBERRY WINE","Wine"],
+  ["7 YEAR OLD BLENDED OLD MONK MATURED XXX RARE RUM VERY OLD VATTED","Rum"],
+  ["7 YEARS OLD BLENDED OLD MONK EXTRA SPECIAL XXX PREMIUM RUM VERY OLD VATTED","Rum"],
+  ["BIG BEN LONDON DELUXE GIN","Gin"],
+  ["BLACK BEAUTY SPECIAL XXX RUM","Rum"],
+  ["DIPLOMAT DELUXE PREMIUM WHISKY","Whisky"],
+  ["GOLDEN EAGLE LAGER BEER","Beer"],
+  ["GOLDEN EAGLE SUPER STRONG BEER","Beer"],
+  ["GOLDEN EAGLE ULTRA PREMIUM LAGER BEER","Beer"],
+  ["GOLDEN OAK BARREL AGED BLENDED WHISKY","Whisky"],
+  ["GYMKHANA GOLD PREMIUM STRONG BEER","Beer"],
+  ["I Q CUCUMBER LONDON DRY GIN","Gin"],
+  ["I Q LONDON DRY GIN","Gin"],
+  ["I Q PINK GIN","Gin"],
+  ["JAMUN THE HIMALAYAN JUNIPER CUCUMBER & MINT DRY GIN","Gin"],
+  ["JAMUN THE HIMALAYAN JUNIPER DRY GIN","Gin"],
+  ["KATI PATANG BAREILLY BOLD CRAFT STRONG BEER","Beer"],
+  ["KATI PATANG BAREILLY EXTRA BOLD CRAFT STRONG BEER","Beer"],
+  ["KATI PATANG SAFFRON LAGER BEER","Beer"],
+  ["KNIGHT RIDER DELUXE PREMIUM GREEN APPLE VODKA","Vodka"],
+  ["KNIGHT RIDER DELUXE PREMIUM VODKA","Vodka"],
+  ["MEAKIN 10000 SUPER STRONG BEER","Beer"],
+  ["NAUTILUS PREMIUM BLENDED EXTRA ORDINARY XO BRANDY","Brandy"],
+  ["OLD MONK BLENDED WITH 20 YEARS OLD AMBER MELLOW AND MATURED RUM","Rum"],
+  ["OLD MONK COFFEE XO EXTRA ORDINARY","Rum"],
+  ["OLD MONK COFFEE XO EXTRA ORDINARY COFFEE FLAVOURED PREMIUM RUM","Rum"],
+  ["OLD MONK LEMON ORIGINAL CITRUS RUM","Rum"],
+  ["OLD MONK LEMON PREMIUM FLAVOURED RUM","Rum"],
+  ["OLD MONK MANGO & CHILLI PREMIUM FLAVOURED RUM","Rum"],
+  ["OLD MONK SPICED XO EXTRA ORDINARY SPICED FLAVOURED PREMIUM RUM","Rum"],
+  ["OLD MONK SUPREME XXX RUM VERY OLD VATTED","Rum"],
+  ["OLD MONK THE LEGEND PREMIUM RUM VERY OLD VATTED","Rum"],
+  ["OLD MONK THE ORIGINAL WHITE SUPER PREMIUM RUM","Rum"],
+  ["RIPS ROYAL SUPERIOR BLENDED GRAIN WHISKY","Liquor"],
+  ["SOLAN NUMBER ONE BLACK RARE AND PREMIUM WHISKY","Whisky"],
+  ["SOLAN NUMBER ONE RARE WHISKY","Whisky"],
+  ["SOLAN NUMBER ONE WHISKY","Whisky"],
+  ["THE ORIGINAL LION PREMIUM SUPER STRONG BEER","Beer"],
+  ["THE SOLAN GOLD INDIAN SINGLE MALT WHISKY","Whisky"],
+  ["THUNDERBOLT DELUXE SUPER STRONG BEER","Beer"],
+  ["THUNDERBOLT PLATINUM EXTRA STRONG BEER","Beer"],
+  ["TRIPPLE CROWN PREMIUM BRANDY","Brandy"],
+  ["CARLSBERG PREMIUM ELEPHANT STRONG DANISH EXPORT BEER","Beer"],
+  ["CARLSBERG SMOOTH CHILL PREMIUM LAGER STANDARD BEER","Beer"],
+  ["TUBORG CLASSIC WITH SCOTCH MALT BEER","Beer"],
+  ["TUBORG PREMIUM BEER","Beer"],
+  ["TUBORG STRONG BEER","Beer"],
+  ["CRAFTED NOT OUT","Wine"],
+  ["KUMA DREW WINE","Wine"],
+  ["SANTORI APPLE WINE","Wine"],
+  ["SANTORI PLUM WINE","Wine"],
+  ["SANTORI RED WINE","Wine"],
+  ["SANTORI ROHDODENDERON WINE","Wine"],
+  ["SANTORI ROSE WINE","Wine"],
+  ["SANTORI WHITE WINE","Wine"],
+  ["TEMPEST CIDER","Cider"],
+  ["TEMPEST SPARKLING WINE","Wine"],
+  ["CHARGER PREMIUM WHISKY","Whisky"],
+  ["CHARGER VODKA","Vodka"],
+  ["CHARGER XXX RUM","Rum"],
+  ["SHAHI ORANGE","Country Liquor"],
+  ["SHAHI SANTRA","Country Liquor"],
+  ["SHAHI SAUNFI","Country Liquor"],
+  ["TAZA ORANGE","Country Liquor"],
+  ["THE MONARCH PREMIUM BLENDED WHISKY","Whisky"],
+  ["JAMIKA XXX RUM","Rum"],
+  ["NASHILI SAUNFI","Country Liquor"],
+  ["PARTY HIT DELUXE WHISKY","Whisky"],
+  ["RACE WHISKY","Whisky"],
+  ["SANTRA NO. 1","Country Liquor"],
+  ["DESI SANTRA","Country Liquor"],
+  ["HN7 PREMIUM GRAIN WHISKY","Whisky"],
+  ["RED DOT SUPER DELUXE GRAIN WHISKY","Whisky"],
+  ["SIRMOUR NO.1","Country Liquor"],
+  ["1965 SPIRIT OF VICTORY CLASSIC XXX RUM","Rum"],
+  ["1965 SPIRIT OF VICTORY PREMIUM XXX RUM","Rum"],
+  ["8 PM PREMIUM BLACK LUXURY WHISKY","Whisky"],
+  ["8 PM PREMIUM BLACK WHISKY","Whisky"],
+  ["CONTESSA CLASSIC XXX RUM BLENDED WITH MATURED CANE JUICE SPIRITS","Rum"],
+  ["CONTESSA XXX RUM BLENDED WITH MATURED CANE JUICE SPIRITS","Rum"],
+  ["KIEV TRIPLE DISTILLED ULTRA SMOOTH PURE VODKA","Vodka"],
+  ["M2 MAGIC MOMENTS PREMIUM GRAIN VODKA","Vodka"],
+  ["M2 MAGIC MOMENTS REMIX FLAVOURED VODKA GREEN APPLE","Vodka"],
+  ["M2 MAGIC MOMENTS REMIX FLAVOURED VODKA LEMON GRASS & GINGER","Vodka"],
+  ["M2 MAGIC MOMENTS REMIX GREEN APPLE FLAVOURED SUPERIOR VODKA","Vodka"],
+  ["M2 MAGIC MOMENTS REMIX LEMON GRASS AND GINGER FLAVOURED SUPERIOR VODKA","Vodka"],
+  ["M2 MAGIC MOMENTS SUPERIOR GRAIN VODKA","Vodka"],
+  ["OLD CHIEF DELUXE XXX RUM","Rum"],
+  ["PARADISE SANTRA DESI SHARAB","Country Liquor"],
+  ["ROCK STAR RESERVE WHISKY","Whisky"],
+  ["ROCK STAR XXX RUM","Rum"],
+  ["ROYAL GENERAL GOLD RESERVE WHISKY","Whisky"],
+  ["ROYAL GENERAL PREMIUM GOLD RESERVE WHISKY","Whisky"],
+  ["ROYAL GENERAL PREMIUM WHISKY","Whisky"],
+  ["SHERRY PLATINUM WHISKY","Whisky"],
+  ["HIMALAYAN HAPPY ORCHARD","Cider"],
+  ["HIMALAYAN HAPPY ORCHARD CRISP BOLD","Wine"],
+  ["HIMALAYAN HAPPY ORCHARD CRISP STRONG","Cider"],
+  ["ROYAL CARRIAGE PREMIUM GRAIN WHISKY","Whisky"],
+  ["SIRMOURI SANTRA","Country Liquor"],
+  ["HIMACHAL NO. 1 SANTRA","Country Liquor"],
+  ["AC BLACK LUXURY PURE GRAIN WHIKSY","Whisky"],
+  ["ARISTOCRAT PREMIUM CLASSIC WHISKY","Whisky"],
+  ["ARISTOCRAT PREMIUM RARE WHISKY","Whisky"],
+  ["ARISTOCRAT SPECIAL RESERVE XXX RUM","Rum"],
+  ["ARISTOCRAT SUPERIOR WHIKSY","Whisky"],
+  ["ARMANDO BLENDED PREMIUM WHISKY","Whisky"],
+  ["ARMANDO SMOOTH GRAIN WHISKY","Whisky"],
+  ["BOXER XXX RUM","Rum"],
+  ["CALENTER DELUXE V.S.O.P BRANDY","Brandy"],
+  ["DOUBLE BLUE PREMIUM BLENDED WHISKY","Whisky"],
+  ["DOUBLE BLUE PRESTIGE BLENDED WHISKY","Whisky"],
+  ["EPISODE CLASSIC WHISKY","Whisky"],
+  ["EPISODE DELUXE WHISKY","Whisky"],
+  ["EPISODE DELUXE XXX RUM","Rum"],
+  ["EPISODE GOLD WHISKY","Whisky"],
+  ["ICE BARE IT ALL VODKA","Vodka"],
+  ["ICE BITE THE APPLE VODKA PREMIUM","Vodka"],
+  ["INNATE RESERVE 9 BARREL BLEND PREMIUM WHISKY","Whisky"],
+  ["KALA ANGOOR","Country Liquor"],
+  ["MASTER PRIDE DELUXE WHISKY","Whisky"],
+  ["MASTERS PRIDE CLASSIC WHISKY","Whisky"],
+  ["NAGPURI SANTRA","Country Liquor"],
+  ["NURPURI SANTRA","Country Liquor"],
+  ["RANI SAUNFI","Country Liquor"],
+  ["ROYAL GREEN DELUXE BLENDED WHISKY","Whisky"],
+  ["ROYAL GREEN ULTRA SMOOTH BLENDED WHISKY","Whisky"],
+  ["ROYAL PRIDE RESERVE WHISKY","Whisky"],
+  ["SEAGRAMS BLENDERS PRIDE EXCLUSIVE PREMIUM WHISKY","Whisky"],
+  ["SEAGRAM'S BLENDERS PRIDE FOUR ELEMENTS PREMIUM WHISKY","Whisky"],
+  ["SEAGRAM'S BLENDERS PRIDE RESERVE COLLECTION EXCLUSIVE WHISKY","Whisky"],
+  ["SEAGRAMS BLENDERS PRIDE RESERVE COLLECTION RARE WHISKY","Whisky"],
+  ["SEAGRAMS IMPERIAL BLUE SUPERIOR GRAIN WHISKY","Whisky"],
+  ["SEAGRAMS ROYAL STAG BARREL SELECT RESERVE WHISKY","Whisky"],
+  ["SEAGRAMS ROYAL STAG BARREL SELECT WHISKY","Whisky"],
+  ["SEAGRAMS ROYAL STAG CLASSIC WHISKY","Whisky"],
+  ["SEAGRAM'S ROYAL STAG DOUBLE DARK PEATY WHISKY","Whisky"],
+  ["STRAY APPLE CRAFT CIDER","Cider"],
+  ["ALL SEASONS DOUBLE BARREL COLLECTION RESERVE WHISKY","Whisky"],
+  ["ALL SEASONS GOLDEN COLLECTION RESERVE WHISKY","Whisky"],
+  ["ALL SEASONS SIR-E-TAJ DOUBLE BARREL COLLECTION RESERVE WHISKY","Whisky"],
+  ["BATCH 9 SELECT CASK RESERVE EDITION WHISKY","Whisky"],
+  ["BOLS BRANDY SPECIAL X.O. EXCELLENCE","Brandy"],
+  ["BOOTZ DARK JAMAICA RUM","Rum"],
+  ["CAPTAIN MORGAN SELECT THE ORIGINAL RUM","Rum"],
+  ["CLASS 21 GRAIN VODKA","Vodka"],
+  ["CUTTY SARK BLENDED SCOTCH WHISKY","Whisky"],
+  ["DIRECTOR SPECIAL BLACK DELUXE WHISKY","Whisky"],
+  ["DSP BLACK CLASSIC WHISKY","Whisky"],
+  ["KNIGHT STORM DELUXE GRAIN WHISKY","Whisky"],
+  ["KNIGHT STORM SUPERIOR GRAIN VODKA","Vodka"],
+  ["KNIGHT STORM SUPERIOR GRAIN WHISKY","Whisky"],
+  ["MCDOWELL'S GREEN LABEL THE RICH BLEND WHISKY","Whisky"],
+  ["MCDOWELL'S NO.1 CELEBRATION CLASSIC XXX RUM","Rum"],
+  ["MCDOWELLS NO.1 CELEBRATION LUXURY XXX RUM","Rum"],
+  ["MCDOWELL'S NO.1 CLASSIC BLEND WHISKY","Whisky"],
+  ["MC DOWELL'S NO.1 DELUXE WHISKY ORIGINAL","Whisky"],
+  ["MCDOWELL'S NO.1 ORIGINAL BLENDED WHISKY","Whisky"],
+  ["MCDOWELL'S NO.1 SELECT WHISKY ORIGINAL","Whisky"],
+  ["OLD FOX PREMIUM XXX RUM","Rum"],
+  ["OLD SNIPER CLASSIC XXX RUM BLENDED WITH MALT","Rum"],
+  ["PREMIERS CLUB PLATINUM WHISKY","Whisky"],
+  ["PREMIERS CLUB RARE GRAIN WHISKY","Whisky"],
+  ["PREMIEUM ROMANOV VODKA","Whisky"],
+  ["PREMIUM ROMANOV VODKA APPLE FLAVOURED","Vodka"],
+  ["RICHTON PREMIUM WHISKY","Whisky"],
+  ["ROYAL CHALLENGE FINE RESERVE WHISKY","Whisky"],
+  ["ROYAL CHALLENGE PREMIUM RESERVE WHISKY","Whisky"],
+  ["SIGNATURE RARE AGED WHISKY","Whisky"],
+  ["HIMACAHLI PEACH WINE","Wine"],
+  ["HIMACHALI CIDER APPLE CIDER","Cider"],
+  ["HIMACHALI CIDER BLACK GRAPE CIDER","Cider"],
+  ["HIMACHALI CIDER GINGER CIDER","Cider"],
+  ["HIMACHALI CIDER ORANGE CIDER","Cider"],
+  ["HIMACHALI CIDER RHODODENDRON CIDER","Cider"],
+  ["HIMACHALI WINE APPLE WINE","Wine"],
+  ["HIMACHALI WINE APRICOT WINE","Wine"],
+  ["HIMACHALI WINE BLACK BERRY WINE","Wine"],
+  ["HIMACHALI WINE BLACK GRAPE WINE","Wine"],
+  ["HIMACHALI WINE CHERRY WINE","Wine"],
+  ["HIMACHALI WINE GINGER WINE","Wine"],
+  ["HIMACHALI WINE KIWI WINE","Wine"],
+  ["HIMACHALI WINE LITCHI WINE","Wine"],
+  ["HIMACHALI WINE PEAR WINE","Wine"],
+  ["HIMACHALI WINE PLUM WINE","Wine"],
+  ["HIMACHALI WINE PUMPKIN WINE","Wine"],
+  ["HIMACHALI WINE RHODODENDRON WINE","Wine"],
+  ["HIMACHALI WINE STRAWBERRY WINE","Wine"],
+  ["HIMACHALI WINE WHITE GRAPE WINE","Wine"],
+  ["BLACKJACK","Country Liquor"],
+  ["LAL QILA","Country Liquor"],
+  ["RANGAR´S GOLDEN GREEN APPLE","Country Liquor"],
+  ["SHABNAM SAUNFI","Country Liquor"],
+  ["SUPER SANTRA","Country Liquor"],
+  ["ASHWA PREMIUM VINTAGE SPICED RUM","Rum"],
+  ["ASHWA PREMIUM WHISKY","Whisky"],
+  ["BIO VODKA REAL APPLE","Vodka"],
+  ["COMMANDO","Country Liquor"],
+  ["DAILY SPECIAL CRAFTED WHISKY","Whisky"],
+  ["ICONIQ WHITE FINEST INTERNATIONAL GRAIN WHISKY","Whisky"],
+  ["OFFICER'S CHOICE BLUE EXQUISITE GRAIN WHISKY","Whisky"],
+  ["OFFICER'S CHOICE BLUE PURE GRAIN WHISKY","Whisky"],
+  ["OFFICER'S CHOICE PURE WHISKY","Whisky"],
+  ["PATIALA SANTRA","Country Liquor"],
+  ["PATIALA SAUNFI","Country Liquor"],
+  ["STERLING RESERVE B7 FINE BLENDED WHISKY","Whisky"],
+  ["HILLSBERG","Wine"],
+  ["VITO PREMIUM","Wine"],
+  ["STORY BBOOMM","Wine"],
+  ["ALVIN HANDCRAFTED PREMIUM WHISKY","Whisky"],
+  ["DOT PREMIUM WHISKY","Whisky"],
+  ["NOORIE SAUNFI","Country Liquor"],
+  ["VRV SANTRA","Country Liquor"],
+  ["BUDWEISER KING OF BEERS (650 ML, 500 ML, 330 ML)","Beer"],
+  ["BUDWEISER MAGNUM BEER (650 ML, 500 ML, 330 ML)","Beer"],
+  ["BUDWEISER MAGNUM SUPER KING OF BEERS","Beer"],
+  ["BUDWEISER SUPER KING OF BEERS","Beer"],
+  ["CORONA EXTRA PREMIUM BEER (330 MLS)","Beer"],
+  ["HOEGAARDEN BELGIAN WIT BEER","Beer"],
+  ["HOEGAARDEN BELGIAN WITBIER BEER (330 ML) (15L, 30L, 50L)","Beer"],
+  ["BIRA 91 BLONDE SUMMER LAGER BEER","Beer"],
+  ["BIRA 91 GOLD WHEAT STRONG BEER","Beer"],
+  ["BIRA 91 RISE RICE STRONG LAGER BEER","Beer"],
+  ["BIRA 91 SUPERFRESH NATURAL WHITE BEER","Beer"],
+  ["ORIGINAL BIRA 91 BOOM SUPER STRONG BEER","Beer"],
+  ["BACARDI APPLE ORIGINAL APPLE RUM","Rum"],
+  ["BACARDI CARTA BLANCA ULTRA CLASSIC SUPERIOR WHITE RUM","Rum"],
+  ["BACARDI EXTRA GOLD + CRANBERRY","Rtd"],
+  ["BACARDI EXTRA GOLD + LEMONADE","Rtd"],
+  ["BACARDI EXTRA GOLD + ORANGE","Rtd"],
+  ["BACARDI GINGER ORIGINAL GINGER RUM","Rum"],
+  ["BACARDI LIMON ORIGINAL CITRUS RUM","Rum"],
+  ["BACARDI MANGO CHILLI ORIGINAL MANGO CHILLI RUM","Rum"],
+  ["BLACK BY BACARDI ORIGINAL PREMIUM CRAFTED RUM","Rum"],
+  ["BREEZER EXTRA GOLD CRISP WATERMELON MINT","Rtd"],
+  ["BREEZER EXTRA GOLD DELICIOUS BLACKBERRY CRUSH","Rtd"],
+  ["BREEZER EXTRA GOLD EXOTIC JAMAICAN PASSION","Rtd"],
+  ["BREEZER EXTRA GOLD RIPE MANGO PEACH","Rtd"],
+  ["BREEZER EXTRA GOLD TANGY CRANBERRY","Rtd"],
+  ["BREEZER EXTRA GOLD TASTY BLUEBERRY","Rtd"],
+  ["BREEZER ULTRA CLASSIC ZESTY ORANGE","Rtd"],
+  ["DEWAR'S BLENDED SCOTCH WHISKY WHITE LABEL ULTRA CLASSIC","Whisky"],
+  ["LEGACY PREMIUM BLENDED WHISKY ULTRA PREMIUM","Whisky"],
+  ["WILLIAM LAWSON 'S BLENDED SCOTCH WHISKY SUPER PREMIUM","Whisky"],
+  ["JIM BEAM KENTUCKY STRAIGHT BOURBON WHISKY","Whisky"],
+  ["OAKSMITH GOLD INTERNATIONAL BLENDED WHISKEY","Whisky"],
+  ["TEACHER'S 50 BLENDED SCOTCH WHISKY","Whisky"],
+  ["TEACHER'S GOLDEN THISTLE BLENDED SCOTCH WHISKY","Whisky"],
+  ["TEACHER'S HIGHLAND CREAM BLENDED SCOTCH WISHKY","Whisky"],
+  ["GODFATHER STRONG BEER","Beer"],
+  ["GODFATHER SUPER 8 FINEST STRONG BEER","Beer"],
+  ["GODFATHER SUPER STRONG HIGH POWER BEER","Beer"],
+  ["GODFATHER SUPREME FINEST STRONG BEER","Beer"],
+  ["GODFATHER THE LEGENDARY PREMIUM STRONG BEER","Beer"],
+  ["SIX FIELDS BLANCHE PREMIUM WHEAT BEER","Beer"],
+  ["SIX FIELDS BRUTE BEER FOR THE BRAVE","Beer"],
+  ["SIX FIELDS CULT PREMIUM STRONG WHEAT BEER","Beer"],
+  ["SIX FIELDS PILSNER RICH HOPS BEER","Beer"],
+  ["FRATELLI CABERNET FRANC SHIRAZ","Wine"],
+  ["FRATELLI CABERNET SAUVIGNON","Wine"],
+  ["FRATELLI CHARDONNAY","Wine"],
+  ["FRATELLI CHENIN BLANC","Wine"],
+  ["FRATELLI CLASSIC CHENIN","Wine"],
+  ["FRATELLI CLASSIC MERLOT","Wine"],
+  ["FRATELLI CLASSIC SHIRAZ","Wine"],
+  ["FRATELLI GRAN CUVEE BRUT","Wine"],
+  ["FRATELLI KYRA PREMIUM RED WINE","Wine"],
+  ["FRATELLI KYRA PREMIUM WHITE WINE","Wine"],
+  ["FRATELLI MERLOT","Wine"],
+  ["FRATELLI NOI SPARKLING","Wine"],
+  ["FRATELLI NOI SPARKLING ROSE","Wine"],
+  ["FRATELLI SANGIOVESE","Wine"],
+  ["FRATELLI SAUVIGNON BLANC","Wine"],
+  ["FRATELLI SETTE","Wine"],
+  ["FRATELLI SHIRAZ","Wine"],
+  ["FRATELLI SHIRAZ ROSE","Wine"],
+  ["FRATELLI SHIRAZ ZIVA RED WINE","Wine"],
+  ["FRATELLI SHIRAZ ZIVA ROSE WINE","Wine"],
+  ["FRATELLI SHIRAZ ZIVA WHITE WINE","Wine"],
+  ["FRATELLI SIDUS PREMIUM PORT WINE","Wine"],
+  ["JNOON INDIA RED WINE","Wine"],
+  ["JNOON INDIA WHITE WINE","Wine"],
+  ["NOI SPRIZER CLASSICO","Wine"],
+  ["SHOTGUN STRONG","Wine"],
+  ["TILT BUBBLY","Wine"],
+  ["TILT BUBBLY ROSE","Wine"],
+  ["TILT RED","Wine"],
+  ["TILT WHITE","Wine"],
+  ["ANTRAA RAGA COLLECTION 750ML","Wine"],
+  ["BLANCA CHENIN BLANC 750ML","Wine"],
+  ["BLUE SHIRAZ CABERNET 750ML","Wine"],
+  ["CASABLANCA VINO SPUMANTE SPARKLING WINE 750ML","Wine"],
+  ["FRIZZANO SPARKLING WINE SEMI DRY 750ML","Wine"],
+  ["RIO GOLD STRONG PARTY DRINK","Wine"],
+  ["RIO RED STRONG PARTY DRINK","Wine"],
+  ["RIO SPRITZER CRANBERRY 330ML","Wine"],
+  ["RIO SPRITZER LEMON PASSION 330ML","Wine"],
+  ["RIO SPRITZER ORANGE PINEAPPLE 330ML","Wine"],
+  ["RIO STRONG EXTRA DRY","Wine"],
+  ["RIO STRONG PARTY DRINK","Wine"],
+  ["BAROMASA MOUNTAIN EDITION DARK RUM","Rum"],
+  ["INDIAN MUDDLED JIGGER SHOTS COFFEE TOFFEE","Liquor"],
+  ["INDIAN MUDDLED JIGGER SHOTS LITCHI ROSE","Liquor"],
+  ["INDIAN MUDDLED JIGGER SHOTS MEETHA PAAN","Liquor"],
+  ["BIG BRO FURY","Wine"],
+  ["BRO CODE EL CLASSICO 375 ML","Wine"],
+  ["BRO CODE SUPREME","Wine"],
+  ["BRO LIGHT CLASSICO","Wine"],
+  ["BRO RED SCARLET","Wine"],
+  ["BROSE BRILLIANCE","Wine"],
+  ["BROSE CLASSICO BRUT ROSE","Wine"],
+  ["WINGMAN BLENDED MALT WHISKY","Whisky"],
+  ["PETER SCOT MALT WHISKY","Whisky"],
+  ["RED KNIGHT FINEST BLENDED MALT WHISKY","Whisky"],
+  ["MEDUSA AIR MILD BEER","Beer"],
+  ["MEDUSA EXTRA PREMIUM STRONG BEER","Beer"],
+  ["MEDUSA HOUSE OF THE DRAGON PREMIUM BEER","Beer"],
+  ["MEDUSA PREMIUM STRONG BEER","Beer"],
+  ["ROCKFORD CLASSIC SUPER PREMIUM WHISKY","Spirits"],
+  ["THE ROCKFORD RESERVE FINE & RARE WHISKY","Spirits"],
+  ["BLUE MOON BELGIAN WHITE BELGIAN STYLE WHEAT ALE BEER","Beer"],
+  ["CARLING STRONG PREMIUM BEER","Beer"],
+  ["MILLER ACE STRONG BEER","Beer"],
+  ["MILLER HIGH LIFE PREMIUM BEER","Beer"],
+  ["PREMIUM THUNDERBOLT SUPER STRONG BEER","Beer"],
+  ["THUNDER BOLT PLATINUM EXTRA STRONG BEER","Beer"],
+  ["DONNA BOLD STRONG BEER","Beer"],
+  ["KIBBA 4 SUPERIOR MILD BEER","Beer"],
+  ["ROCKBERG GOLD BEER STRONG","Beer"],
+  ["ROCKBERG GOLD PREMIUM BEER STRONG","Beer"],
+  ["SEAGRAM'S 100 PIPERS BLENDED MALT SCOTCH WHISKY","Whisky"],
+  ["SEAGRAMS 100 PIPERS EXCEPTIONAL BLENDED SCOTCH WHISKY","Whisky"],
+  ["SEAGRAMS 100 PIPERS EXCEPTIONAL BLENDED SCOTCH WHISKY AGED 12 YEARS","Whisky"],
+  ["SEAGRAM'S 100 PIPERS PRESTIGE BLENDED SCOTCH WHISKY AGED 12 YEARS","Whisky"],
+  ["SEAGRAMS OAKEN GLOW BLENDED PREMIUM WHISKY","Whisky"],
+  ["CAMIKARA RUM CASK 3 YO AGED","Rum"],
+  ["CASHMIR VODKA","Vodka"],
+  ["INDRI SINGLE MALT INDIAN WHISKY","Whisky"],
+  ["INDRI SINGLE MALT INDIAN WHISKY AGNEYA","Whisky"],
+  ["WHISTLER BARREL AGED BLENDED MALT WHISKY","Whisky"],
+  ["JAISALMER INDIAN CRAFT GIN","Gin"],
+  ["M2 MAGIC MOMENTS VERVE SUPER PREMIUM VODKA","Vodka"],
+  ["MAGIC MOMENTS VERVE CRANBERRY TEASE PREMIUM FLAVOURED VODKA","Vodka"],
+  ["MORPHEUS XO BLENDED PREMIUM BRANDY","Brandy"],
+  ["RAMPUR INDIAN SINGLE MALT WHISKY NON CHILL FILTERED DOUBLE CASK","Whisky"],
+  ["ROYAL RANTHAMBORE HERITAGE COLLECTION ROYAL CRAFTED RESERVE WHISKY","Whisky"],
+  ["SANGAM WORLD MALT WHISKY","Whisky"],
+  ["MOONSHINE APPLE CYDER MEAD","Wine"],
+  ["MOONSHINE COFFEE MEAD","Wine"],
+  ["MOONSHINE GRILLED PINEAPPLE MEAD","Wine"],
+  ["MOONSHINE GUAVA CHILLI MEAD","Wine"],
+  ["SALUD FIESTA","Rtd"],
+  ["SALUD STRONG CRANBERRY","Rtd"],
+  ["SALUD VIKING BRUT","Wine"],
+  ["SIMBA JUNGLE STOUT","Beer"],
+  ["SIMBA ROAR EXTRA STRONG","Beer"],
+  ["SIMBA ROAR SERIES LIGHT PREMIUM LAGER BEER","Beer"],
+  ["SIMBA WIT BOLD EDITION BELGIAN- STYLE WITBIER","Beer"],
+  ["DIA RED WINE SPARKLER","Wine"],
+  ["DIA WHITE WINE SPARKLER","Wine"],
+  ["DINDORI RESERVE CHARDONNAY","Wine"],
+  ["MADERA NASHIK VALLEY RED WINE","Wine"],
+  ["MADERA NASHIK VALLEY WHITE WINE","Wine"],
+  ["MOSAIC RED WINE","Wine"],
+  ["MOSAIC WHITE WINE","Wine"],
+  ["PORT WINE 1000","Wine"],
+  ["RASA SYRAH","Wine"],
+  ["SAMARA RED WINE","Wine"],
+  ["SAMARA WHITE WINE","Wine"],
+  ["SATORI RED WINE","Wine"],
+  ["SULA BRUT CREMENT DE NASHIK","Wine"],
+  ["SULA BRUT TROPICALE CREMENT DE NASHIK","Wine"],
+  ["SULA CHENIN BLANC WHITE","Wine"],
+  ["SULA DINDORI RESERVE SHIRAZ","Wine"],
+  ["SULA DINDORI RESERVE VIOGNIER","Wine"],
+  ["SULA LATE HARVEST CHENIN BLANC WHITE","Wine"],
+  ["SULA RED ZINFANDEL","Wine"],
+  ["SULA RIESLING","Wine"],
+  ["SULA SAUVIGNON BLANC WHITE","Wine"],
+  ["SULA SECO METHODE CLASSIQUE","Wine"],
+  ["SULA SECO ROSE METHODE CLASSIQUE","Wine"],
+  ["SULA SHIRAZ CABERNET","Wine"],
+  ["SULA SPARKLING SHIRAZ CREMENT DE NASHIK","Wine"],
+  ["SULA ZINFANDEL ROSE","Wine"],
+  ["KIBBA 6 SUPERIOR STRONG BEER","Beer"],
+  ["HEINEKEN LAGER BEER","Beer"],
+  ["KINGFISHER PREMIUM LAGER BEER","Beer"],
+  ["KINGFISHER STRONG PREMIUM BEER","Beer"],
+  ["KINGFISHER ULTRA LAGER BEER","Beer"],
+  ["KINGFISHER ULTRA MAX PREMIUM STRONG BEER","Beer"],
+  ["KINGFISHER ULTRA PREMIUM BEER","Beer"],
+  ["KINGFISHER PREMIER MALT BEER","Beer"],
+  ["KINGFISHER PREMIUM SPECIAL LAGER BEER","Beer"],
+  ["KINGFISHER PRESTIGE LAGER BEER","Beer"],
+  ["KINGFISHER PRESTIGE STRONG BEER","Beer"],
+  ["KINGFISHER STRONG PREMIER MALT BEER","Beer"],
+  ["KINGFISHER STRONG SPECIAL PREMIUM BEER","Beer"],
+  ["KINGFISHER ULTRA MAX SELECT PREMIUM STRONG BEER","Beer"],
+  ["KINGFISHER ULTRA SELECT LAGER BEER","Beer"],
+  ["ANTIQUITY BLUE ULTRA PREMIUM WHISKY","Whisky"],
+  ["BLACK DOG CENTENARY BLACK RESERVE AGED & RARE BLENDED SCOTCH WHISKY","Whisky"],
+  ["BLACK DOG CENTENARY BLACK RESERVE AGED & RARE BLENDED SCOTCH WHISKY CELEBRATION EDITION","Whisky"],
+  ["BLACK DOG TRIPLE GOLD RESERVE BLENDED SCOTCH WHISKY","Whisky"],
+  ["BLACK DOG TRIPLE GOLD RESERVE BLENDED SCOTCH WHISKY CELEBRATION EDITION","Whisky"],
+  ["BLACK & WHITE BLENDED SCOTCH WHISKY","Whisky"],
+  ["ROYAL CHALLENGE AMERICAN PRIDE GOLD BLEND WHISKY","Liquor"],
+  ["SIGNATURE PREMIER GRAIN WHISKY","Whisky"],
+  ["SMIRNOFF GREEN APPLE TRIPLE DISTILLED VODKA ADDED GREEN APPLE FLAVOUR","Vodka"],
+  ["SMIRNOFF ORANGE TRIPLE DISTILLED VODKA ADDED ORANGE FLAVOUR","Vodka"],
+  ["SMIRNOFF TRIPLE DISTILLED VODKA RECIPE NO.21 STE PIERRE SMIRNOFF FLS","Vodka"],
+  ["VAT 69 BLENDED SCOTCH WHISKY","Whisky"],
+  ["VAT 69 BLENDED SCOTCH WHISKY CELEBRATION EDITION","Whisky"]
 ];
 const ZONES=["Zone A","Zone B","Zone C","Zone D","Zone E"];
 const N=155;
@@ -586,13 +1240,13 @@ async function checkConn(){
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────
-const TABS=['dashboard','entry','prices','stores','store-view','search','history','transfer'];
+const TABS=['dashboard','entry','prices','stores','store-view','search','history','transfer','brands-mgr'];
 function go(id){
   document.querySelectorAll('.ntab').forEach((t,i)=>t.classList.toggle('on',TABS[i]===id));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+id));
   ({
     'dashboard':renderDash,'entry':renderEntry,'prices':renderPrices,
-    'stores':renderStores,'store-view':fillStoreSelects,'history':renderHistory,'transfer':renderTransfer
+    'stores':renderStores,'store-view':fillStoreSelects,'history':renderHistory,'transfer':renderTransfer,'brands-mgr':renderBrandMgr
   })[id]?.();
 }
 
@@ -999,6 +1653,170 @@ function saveCurrentView(){
   else if(id==='stores') saveStores();
   else toast('Use the Save button inside this section');
 }
+
+
+
+// ── BRAND MANAGER ─────────────────────────────────────────────────────
+function getBrands(){
+  try{
+    const stored = localStorage.getItem('lv_custom_brands');
+    if(stored) return JSON.parse(stored);
+  }catch(e){}
+  // Return default BRANDS as objects
+  return BRANDS.map(function(b){ return {name:b[0],category:b[1],qsp:0,psp:0,nsp:0}; });
+}
+function saveBrandsLocal(brands){
+  localStorage.setItem('lv_custom_brands', JSON.stringify(brands));
+  // Also sync BRANDS array used by rest of app
+  syncBrandsToApp(brands);
+}
+function syncBrandsToApp(brands){
+  // Update the global BRANDS array
+  BRANDS.length = 0;
+  brands.forEach(function(b){ BRANDS.push([b.name, b.category]); });
+}
+
+async function renderBrandMgr(){
+  // Load from Supabase prices table + local
+  let brands = getBrands();
+  // Also try to load from Supabase prices
+  try{
+    const rows = await api('GET','prices','','select=brand,category,qsp,psp,nsp&order=category.asc,brand.asc');
+    if(rows && rows.length > 0){
+      // Merge - Supabase is source of truth for prices
+      const sbMap = {};
+      rows.forEach(function(r){ sbMap[r.brand] = r; });
+      // Add any local brands not in Supabase
+      brands = rows.map(function(r){
+        return {name:r.brand, category:r.category||'Other', qsp:r.qsp||0, psp:r.psp||0, nsp:r.nsp||0};
+      });
+      saveBrandsLocal(brands);
+    }
+  }catch(e){}
+  
+  renderBrandTable(brands);
+  document.getElementById('bm-count').textContent = brands.length + ' brands';
+}
+
+function renderBrandTable(brands){
+  const filter = (document.getElementById('bm-filter').value||'').toLowerCase();
+  const catFilter = document.getElementById('bm-cat-filter').value;
+  const tb = document.getElementById('bm-body');
+  tb.innerHTML = '';
+  let shown = 0;
+  brands.forEach(function(b, i){
+    if(filter && !b.name.toLowerCase().includes(filter)) return;
+    if(catFilter && b.category !== catFilter) return;
+    shown++;
+    const tr = tb.insertRow();
+    tr.dataset.idx = i;
+    tr.innerHTML = '<td style="color:var(--text3);font-size:11px">' + (i+1) + '</td>'
+      + '<td><input type="text" value="' + b.name.replace(/"/g,'&quot;') + '" data-field="name" data-idx="' + i + '" style="width:220px" onchange="updateBrand(this)"></td>'
+      + '<td><select data-field="category" data-idx="' + i + '" onchange="updateBrand(this)" style="width:110px">'
+      + ['Whisky','Rum','Vodka','Gin','Beer','Wine','Brandy','Cider','Country Liquor','Rtd','Spirits','Liquor','Other'].map(function(c){
+          return '<option' + (b.category===c?' selected':'') + '>' + c + '</option>';
+        }).join('')
+      + '</select></td>'
+      + '<td><input type="number" value="' + (b.qsp||0) + '" data-field="qsp" data-idx="' + i + '" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
+      + '<td><input type="number" value="' + (b.psp||0) + '" data-field="psp" data-idx="' + i + '" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
+      + '<td><input type="number" value="' + (b.nsp||0) + '" data-field="nsp" data-idx="' + i + '" min="0" style="width:80px;text-align:right" onchange="updateBrand(this)"></td>'
+      + '<td style="text-align:center"><button class="btn btn-sm" style="background:var(--red);color:#fff;font-size:11px" onclick="deleteBrand(' + i + ')">Delete</button></td>';
+  });
+  document.getElementById('bm-count').textContent = brands.length + ' brands (' + shown + ' shown)';
+}
+
+function filterBrands(){
+  renderBrandTable(getBrands());
+}
+
+function updateBrand(el){
+  const brands = getBrands();
+  const idx = parseInt(el.dataset.idx);
+  const field = el.dataset.field;
+  if(isNaN(idx)||!field) return;
+  if(field === 'name' || field === 'category'){
+    brands[idx][field] = el.value;
+  } else {
+    brands[idx][field] = parseFloat(el.value)||0;
+  }
+  saveBrandsLocal(brands);
+  // Save to Supabase in background
+  saveBrandToSupabase(brands[idx]);
+}
+
+async function saveBrandToSupabase(brand){
+  try{
+    await api('POST','prices',[{
+      brand: brand.name,
+      category: brand.category,
+      qpp: brand.qpp||0, qsp: brand.qsp||0,
+      ppp: brand.ppp||0, psp: brand.psp||0,
+      npp: brand.npp||0, nsp: brand.nsp||0
+    }],'on_conflict=brand');
+  }catch(e){ /* silent */ }
+}
+
+async function addBrand(){
+  const name = document.getElementById('bm-name').value.trim().toUpperCase();
+  const cat  = document.getElementById('bm-cat').value;
+  const qsp  = parseFloat(document.getElementById('bm-qsp').value)||0;
+  const psp  = parseFloat(document.getElementById('bm-psp').value)||0;
+  const nsp  = parseFloat(document.getElementById('bm-nsp').value)||0;
+  if(!name){ toast('Enter a brand name','err'); return; }
+  
+  const brands = getBrands();
+  if(brands.find(function(b){ return b.name===name; })){
+    toast('Brand already exists','err'); return;
+  }
+  
+  const newBrand = {name, category:cat, qsp, psp, nsp, qpp:0, ppp:0, npp:0};
+  brands.push(newBrand);
+  saveBrandsLocal(brands);
+  
+  // Save to Supabase
+  load(true,'Adding brand...');
+  try{
+    await api('POST','prices',[{brand:name,category:cat,qpp:0,qsp,ppp:0,psp,npp:0,nsp}],'on_conflict=brand');
+    load(false);
+    toast(name + ' added','ok');
+  }catch(e){ load(false); toast('Saved locally. Supabase sync failed.'); }
+  
+  // Clear form
+  document.getElementById('bm-name').value = '';
+  document.getElementById('bm-qsp').value = '';
+  document.getElementById('bm-psp').value = '';
+  document.getElementById('bm-nsp').value = '';
+  
+  renderBrandMgr();
+}
+
+async function deleteBrand(idx){
+  const brands = getBrands();
+  const brand = brands[idx];
+  if(!confirm('Delete "' + brand.name + '"? This cannot be undone.')) return;
+  
+  load(true,'Deleting...');
+  try{
+    await api('DELETE','prices','','brand=eq.' + encodeURIComponent(brand.name));
+  }catch(e){ /* continue */ }
+  
+  brands.splice(idx, 1);
+  saveBrandsLocal(brands);
+  load(false);
+  toast(brand.name + ' deleted','ok');
+  renderBrandMgr();
+}
+
+// On app init — load custom brands if saved
+(function initBrands(){
+  const stored = localStorage.getItem('lv_custom_brands');
+  if(stored){
+    try{
+      const brands = JSON.parse(stored);
+      syncBrandsToApp(brands);
+    }catch(e){}
+  }
+})();
 
 
 // ── STOCK TRANSFER ────────────────────────────────────────────────────
