@@ -240,8 +240,12 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
   <!-- ═══ BRAND ENTRY ═══ -->
   <div id="v-entry" class="view">
     <div class="page-hd">
-      <div><h2>Brand Entry</h2><p>Enter daily data per brand per store</p></div>
-      <button class="btn btn-green" onclick="saveBrandEntry()" id="be-save-btn">Save Entry</button>
+      <div><h2>Brand Entry</h2><p>Enter daily data per brand per store — type brand name in each row</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="addEntryRow()">+ Add Row</button>
+        <button class="btn btn-outline btn-sm" onclick="clearEntryRows()">Clear All</button>
+        <button class="btn btn-green" onclick="saveBrandEntry()" id="be-save-btn">Save Entry</button>
+      </div>
     </div>
     <div class="card">
       <div class="card-hd"><div class="card-hd-left">Entry details</div></div>
@@ -1337,61 +1341,124 @@ async function renderEntry(){
   await getPrices();
   const tb=document.getElementById('be-body');
   tb.innerHTML='';
-  let lc='';
-  BRANDS.forEach(([brand,cat])=>{
-    if(cat!==lc){
-      lc=cat;
-      const s=tb.insertRow(); s.className='grp-row';
-      s.insertCell().colSpan=22; s.cells[0].textContent=cat;
-    }
-    const p=_prices[brand]||{};
-    const k=brand.replace(/\W/g,'_');
-    const tr=tb.insertRow();
-    tr.dataset.brand=brand; tr.dataset.cat=cat;
-    tr.innerHTML=`
-      <td><b style="font-size:11px">${brand}</b></td>
-      <td><span class="badge b-blue">${cat}</span></td>
-      <td><input type="number" class="ou" min="0" placeholder="0" oninput="cr(this)"></td>
-      <td><input type="number" class="ov" min="0" placeholder="0"></td>
-      <td><span class="calc" id="opp_${k}">—</span></td>
-      <td><span class="calc" id="osp_${k}">—</span></td>
-      <td><input type="number" class="ru" min="0" placeholder="0" oninput="cr(this)"></td>
-      <td><input type="number" class="rv" min="0" placeholder="0"></td>
-      <td><span class="calc" id="rpp_${k}">—</span></td>
-      <td><span class="calc" id="rsp_${k}">—</span></td>
-      <td><input type="number" class="su" min="0" placeholder="0" oninput="cr(this)"></td>
-      <td><input type="number" class="sv" min="0" placeholder="0"></td>
-      <td><span class="calc" id="spp_${k}">—</span></td>
-      <td><span class="calc" id="ssp_${k}">—</span></td>
-      <td><span class="calc v" id="cu_${k}">0</span></td>
-      <td><span class="calc" id="cv_${k}">—</span></td>
-      <td><span class="calc" id="cpp_${k}">—</span></td>
-      <td><span class="calc" id="csp_${k}">—</span></td>
-      <td><input type="number" class="ca" min="0" placeholder="0"></td>
-      <td><input type="number" class="cd" min="0" placeholder="0"></td>
-      <td><input type="number" class="up" min="0" placeholder="0"></td>
-    `;
-  });
+  // Add 10 blank rows by default
+  for(let i=0;i<10;i++) addEntryRow();
 }
 
-function cr(el){
+function addEntryRow(){
+  const tb=document.getElementById('be-body');
+  const rowNum=tb.rows.length+1;
+  const tr=tb.insertRow();
+  tr.className='entry-row';
+  tr.innerHTML=`
+    <td>
+      <input type="text" class="brand-input" placeholder="Type brand name..." 
+        style="width:200px;font-weight:600;font-size:11px" 
+        oninput="onBrandInput(this)" autocomplete="off">
+      <div class="brand-suggestions" style="display:none;position:absolute;background:#fff;border:1px solid var(--border2);border-radius:6px;z-index:100;max-height:180px;overflow-y:auto;min-width:220px;box-shadow:0 4px 12px rgba(0,0,0,.1)"></div>
+    </td>
+    <td>
+      <select class="cat-sel" style="width:110px;font-size:11px;padding:4px 6px;border:1px solid var(--border2);border-radius:5px">
+        <option value="">—</option>
+        <option>Whisky</option><option>Rum</option><option>Vodka</option>
+        <option>Gin</option><option>Beer</option><option>Wine</option>
+        <option>Brandy</option><option>Cider</option><option>Country Liquor</option>
+        <option>Rtd</option><option>Spirits</option><option>Liquor</option><option>Other</option>
+      </select>
+    </td>
+    <td><input type="number" class="ou" min="0" placeholder="0" oninput="crRow(this)"></td>
+    <td><input type="number" class="ov" min="0" placeholder="0"></td>
+    <td><span class="calc">—</span></td>
+    <td><span class="calc">—</span></td>
+    <td><input type="number" class="ru" min="0" placeholder="0" oninput="crRow(this)"></td>
+    <td><input type="number" class="rv" min="0" placeholder="0"></td>
+    <td><span class="calc">—</span></td>
+    <td><span class="calc">—</span></td>
+    <td><input type="number" class="su" min="0" placeholder="0" oninput="crRow(this)"></td>
+    <td><input type="number" class="sv" min="0" placeholder="0"></td>
+    <td><span class="calc">—</span></td>
+    <td><span class="calc">—</span></td>
+    <td><span class="calc v">0</span></td>
+    <td><span class="calc">—</span></td>
+    <td><span class="calc">—</span></td>
+    <td><span class="calc">—</span></td>
+    <td><input type="number" class="ca" min="0" placeholder="0"></td>
+    <td><input type="number" class="cd" min="0" placeholder="0"></td>
+    <td><input type="number" class="up" min="0" placeholder="0"></td>
+    <td><button onclick="this.closest('tr').remove()" style="background:var(--red);color:#fff;border:none;border-radius:4px;padding:3px 8px;cursor:pointer;font-size:11px">✕</button></td>
+  `;
+}
+
+function clearEntryRows(){
+  if(!confirm('Clear all rows?')) return;
+  const tb=document.getElementById('be-body');
+  tb.innerHTML='';
+  for(let i=0;i<10;i++) addEntryRow();
+}
+
+function onBrandInput(el){
+  const val=el.value.trim().toUpperCase();
+  const row=el.closest('tr');
+  const sugBox=el.nextElementSibling;
+  if(val.length<2){sugBox.style.display='none';return;}
+  
+  // Get brands from prices or BRANDS array
+  const allBrands=Object.keys(_prices).length>0 ? Object.keys(_prices) : BRANDS.map(b=>b[0]);
+  const matches=allBrands.filter(b=>b.toUpperCase().includes(val)).slice(0,8);
+  
+  if(!matches.length){sugBox.style.display='none';return;}
+  sugBox.innerHTML=matches.map(b=>`<div onclick="selectBrand(this,'${b.replace(/'/g,"\'")}','${(_prices[b]&&_prices[b].category)||''}')" 
+    style="padding:6px 10px;cursor:pointer;font-size:11px;border-bottom:0.5px solid #f0f3f7;font-weight:500"
+    onmouseover="this.style.background='#e8f4fb'" onmouseout="this.style.background=''">${b}</div>`).join('');
+  
+  // Position suggestions
+  sugBox.style.display='block';
+  sugBox.style.position='absolute';
+}
+
+function selectBrand(el, brand, cat){
+  const sugBox=el.parentElement;
+  const row=sugBox.closest('tr');
+  row.querySelector('.brand-input').value=brand;
+  sugBox.style.display='none';
+  // Auto-fill category
+  if(cat){
+    const catSel=row.querySelector('.cat-sel');
+    for(let i=0;i<catSel.options.length;i++){
+      if(catSel.options[i].value===cat||catSel.options[i].text===cat){catSel.selectedIndex=i;break;}
+    }
+  }
+  // Auto-calc
+  crRow(row.querySelector('.ou'));
+}
+
+// Close suggestions when clicking outside
+document.addEventListener('click',function(e){
+  if(!e.target.classList.contains('brand-input')){
+    document.querySelectorAll('.brand-suggestions').forEach(s=>s.style.display='none');
+  }
+});
+
+function crRow(el){
   const tr=el.closest('tr');
-  const brand=tr.dataset.brand;
+  const brand=(tr.querySelector('.brand-input').value||'').trim();
   const p=_prices[brand]||{};
   const ou=+tr.querySelector('.ou').value||0;
   const ru=+tr.querySelector('.ru').value||0;
   const su=+tr.querySelector('.su').value||0;
   const cu=Math.max(0,ou+ru-su);
   const qpp=+p.qpp||0, qsp=+p.qsp||0;
-  const k=brand.replace(/\W/g,'_');
-  const S=(id,v)=>{const e=document.getElementById(id+'_'+k);if(e){e.textContent=v?inr(v):'—';e.className='calc'+(v?' v':'');}}
-  S('opp',ou*qpp); S('osp',ou*qsp);
-  S('rpp',ru*qpp); S('rsp',ru*qsp);
-  S('spp',su*qpp); S('ssp',su*qsp);
-  const ce=document.getElementById('cu_'+k);
-  if(ce){ce.textContent=cu;ce.className='calc v';}
-  S('cv',cu*qsp); S('cpp',cu*qpp); S('csp',cu*qsp);
+  const calcs=tr.querySelectorAll('.calc');
+  // calcs order: opp, osp, rpp, rsp, spp, ssp, cu, cv, cpp, csp
+  function set(el,v){el.textContent=v?inr(v):'—';el.className='calc'+(v?' v':'');}
+  set(calcs[0],ou*qpp); set(calcs[1],ou*qsp);
+  set(calcs[2],ru*qpp); set(calcs[3],ru*qsp);
+  set(calcs[4],su*qpp); set(calcs[5],su*qsp);
+  calcs[6].textContent=cu; calcs[6].className='calc v';
+  set(calcs[7],cu*qsp); set(calcs[8],cu*qpp); set(calcs[9],cu*qsp);
 }
+
+// cr() replaced by crRow()
 
 async function saveBrandEntry(){
   const date=document.getElementById('be-date').value;
@@ -1400,8 +1467,10 @@ async function saveBrandEntry(){
   if(!sv){toast('Select a store','err');return;}
   const [sc,sn]=sv.split('||');
   const rows=[];
-  document.querySelectorAll('#be-body tr[data-brand]').forEach(tr=>{
-    const brand=tr.dataset.brand,cat=tr.dataset.cat;
+  document.querySelectorAll('#be-body tr.entry-row').forEach(tr=>{
+    const brand=(tr.querySelector('.brand-input').value||'').trim();
+    const cat=tr.querySelector('.cat-sel').value||'Other';
+    if(!brand) return;
     const ou=+tr.querySelector('.ou').value||0;
     const ov=+tr.querySelector('.ov').value||0;
     const ru=+tr.querySelector('.ru').value||0;
