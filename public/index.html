@@ -290,14 +290,18 @@ td input:focus{outline:none;border-color:var(--accent);background:#fff}
       <div><h2>Price Master</h2><p>Set purchase price and sale price per brand — used for auto-calculation everywhere</p></div>
       <button class="btn btn-green" onclick="savePrices()">Save Prices</button>
     </div>
-    <div class="hint">PP = Purchase Price &nbsp;·&nbsp; SP = Sale Price &nbsp;·&nbsp; Set once, auto-calculates in Brand Entry and Dashboard</div>
+    <div class="hint">PP = Purchase Price &nbsp;·&nbsp; SP = Sale Price (MRP) &nbsp;·&nbsp; Sizes: 750ml / 375ml / 180ml / 90ml / 60ml / Others (enter custom ml) &nbsp;·&nbsp; Set once, auto-calculates everywhere</div>
     <div class="card">
       <div class="tscroll"><table>
         <thead><tr>
           <th style="min-width:150px">Brand</th><th>Category</th>
-          <th class="r">Qtrs PP (₹)</th><th class="r">Qtrs SP (₹)</th>
-          <th class="r">Pints PP (₹)</th><th class="r">Pints SP (₹)</th>
-          <th class="r">Nips PP (₹)</th><th class="r">Nips SP (₹)</th>
+          <th class="r">750ml PP (₹)</th><th class="r">750ml SP (₹)</th>
+          <th class="r">375ml PP (₹)</th><th class="r">375ml SP (₹)</th>
+          <th class="r">180ml PP (₹)</th><th class="r">180ml SP (₹)</th>
+          <th class="r">90ml PP (₹)</th><th class="r">90ml SP (₹)</th>
+          <th class="r">60ml PP (₹)</th><th class="r">60ml SP (₹)</th>
+          <th class="r">Others PP (₹)</th><th class="r">Others SP (₹)</th>
+          <th class="r">Others ml</th>
         </tr></thead>
         <tbody id="pm-body"></tbody>
       </table></div>
@@ -1540,6 +1544,10 @@ async function savePrices(){
       qpp:+tr.querySelector('.qpp').value||0, qsp:+tr.querySelector('.qsp').value||0,
       ppp:+tr.querySelector('.ppp').value||0, psp:+tr.querySelector('.psp').value||0,
       npp:+tr.querySelector('.npp').value||0, nsp:+tr.querySelector('.nsp').value||0,
+      n90pp:+tr.querySelector('.n90pp').value||0, n90sp:+tr.querySelector('.n90sp').value||0,
+      n60pp:+tr.querySelector('.n60pp').value||0, n60sp:+tr.querySelector('.n60sp').value||0,
+      opp:+tr.querySelector('.opp').value||0, osp:+tr.querySelector('.osp').value||0,
+      oml:+tr.querySelector('.oml').value||0,
     });
   });
   load(true,'Saving prices…');
